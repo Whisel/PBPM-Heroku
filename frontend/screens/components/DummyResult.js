@@ -14,7 +14,11 @@ class DummyResult extends Component {
         }
 
         this.onCheckBoxPress = this.onCheckBoxPress.bind(this);
-    }
+	}
+	
+	async onResultsPress() {
+		this.props.navigation.navigate("ResultsScreen");
+	}
 
     async onCheckBoxPress() {
         await this.setState({
@@ -76,14 +80,21 @@ class DummyResult extends Component {
                     <CompareCheckBox/>
                 </View>
                 
-                <View style={styles.resultBox}>
-                    <Text category={'s1'} style={styles.resultBoxText}>
-                        {this.props.projectArea}
-                    </Text>
-                    <Text category={'s2'} style={styles.resultBoxComment}>
-                        {this.props.projectComment}
-                    </Text>
-                </View>
+				{/* Button should show result screen*/}
+				<Button 
+					style={styles.resultBox} 
+					appearance={"outline"} 
+					status={"basic"}
+					onPress={this.onResultsPress}
+				>
+					<Text category={'s1'} style={styles.resultBoxText}>
+						{this.props.projectArea}
+					</Text>
+					{'\n'}
+					<Text category={'s2'} style={styles.resultBoxComment}>
+						{this.props.projectComment}
+					</Text>
+                </Button>
 
             </View>
         );

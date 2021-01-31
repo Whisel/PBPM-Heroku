@@ -88,36 +88,41 @@ class HomeScreen extends Component {
                 <HomeResultView onComparePress={this.onComparePress}/>
 
                 <ScrollView>
-                    <DummyResult 
-                        inList={this.inSelectedProject}
-                        compare={this.state.compare} 
-                        compareIncrement={this.compareIncrement} 
-                        compareDecrement={this.compareDecrement}
-                        addProject={this.addToSelectedProjects}
-                        removeProject={this.props.removeFromSelectedProjects}
-                        projectArea={"Lake Lilian"}
-                        projectComment={"Pavillion at Lake Lilian"}
-                        />
-                    <DummyResult 
-                        inList={this.inSelectedProject}
-                        compare={this.state.compare} 
-                        compareIncrement={this.compareIncrement} 
-                        compareDecrement={this.compareDecrement}
-                        addProject={this.addToSelectedProjects}
-                        removeProject={this.props.removeFromSelectedProjects}
-                        projectArea={"Lake Eola"}
-                        projectComment={"East side of Lake Eola"}
-                        />
-                    <DummyResult 
-                        inList={this.inSelectedProject}
-                        compare={this.state.compare} 
-                        compareIncrement={this.compareIncrement} 
-                        compareDecrement={this.compareDecrement}
-                        addProject={this.addToSelectedProjects}
-                        removeProject={this.props.removeFromSelectedProjects}
-                        projectArea={"J. Blanchard Park"}
-                        projectComment={"First mile of trails"}
-                        />
+					<DummyResult 
+						navigation={this.props.navigation}
+						inList={this.inSelectedProject}
+						compare={this.state.compare} 
+						compareIncrement={this.compareIncrement} 
+						compareDecrement={this.compareDecrement}
+						addProject={this.addToSelectedProjects}
+						removeProject={this.props.removeFromSelectedProjects}
+						projectArea={"Lake Lilian"}
+						projectComment={"Pavillion at Lake Lilian"}
+						/>
+
+					<DummyResult 
+						navigation={this.props.navigation}
+						inList={this.inSelectedProject}
+						compare={this.state.compare} 
+						compareIncrement={this.compareIncrement} 
+						compareDecrement={this.compareDecrement}
+						addProject={this.addToSelectedProjects}
+						removeProject={this.props.removeFromSelectedProjects}
+						projectArea={"Lake Eola"}
+						projectComment={"East side of Lake Eola"}
+						/>
+
+					<DummyResult 
+						navigation={this.props.navigation}
+						inList={this.inSelectedProject}
+						compare={this.state.compare} 
+						compareIncrement={this.compareIncrement} 
+						compareDecrement={this.compareDecrement}
+						addProject={this.addToSelectedProjects}
+						removeProject={this.props.removeFromSelectedProjects}
+						projectArea={"J. Blanchard Park"}
+						projectComment={"First mile of trails"}
+						/>
                 </ScrollView>
 
                 <ConfirmCompare 
