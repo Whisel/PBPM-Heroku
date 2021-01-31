@@ -1,6 +1,5 @@
-const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
-const config = require('../utils/config.js')
+const mongoose = require('mongoose')
 const uniqueValidator = require('mongoose-unique-validator')
 
 const ObjectId = mongoose.Schema.Types.ObjectId
@@ -14,20 +13,14 @@ const rand = (min = 0, max = 50) => {
 const user_schema = mongoose.Schema({
     firstname: {
         type: String,
-        required: false,
-        unique: false,
         match: /[A-Za-z]/
     },
     lastname: {
         type: String,
-        required: false,
-        unique: false,
         match: /[A-Za-z]/
     },
     institution: {
         type: String,
-        required: false,
-        unique: false,
         match: /[A-Za-z ]/
     },
     email: {
@@ -40,23 +33,29 @@ const user_schema = mongoose.Schema({
         type: String,
         required: true
     },
-    is_verified:{type: Boolean},
-    vefification_code:{type: String},
-    verification_timeout:{type:String},
-    invites:{type:[ObjectId]},
-    teams: [{ type: ObjectId, ref: 'Teams' }]
+    is_verified: {
+        type: Boolean,
+        default: false
+    },
+    verification_code: String,
+    verification_timeout: String,
+    invites: [ObjectId],
+    teams: [{
+        type: ObjectId,
+        ref: 'Teams'
+    }]
 })
 
 user_schema.plugin(uniqueValidator)
 
 const Users = module.exports = mongoose.model('Users', user_schema)
 
-module.exports.getUserByEmail = async function(email){
-    const query = {email: email}
+module.exports.getUserByEmail = async function(email) {
+    const query = { email: email }
     return await Users.findOne(query)
 }
 
-module.exports.addUser = async function(newUser){
+module.exports.addUser = async function(newUser) {
     // Replace password with hashed version
     const salt  = await bcrypt.genSalt(10)
     const hash = await bcrypt.hash(newUser.password, salt)
@@ -64,74 +63,73 @@ module.exports.addUser = async function(newUser){
     return await newUser.save()
 }
 
-module.exports.updateUser = async function(userId, newUser){
+module.exports.updateUser = async function(userId, newUser) {
     return await Users.updateOne(
-        {_id:userId},
-        {$set: {firstname:newUser.firstname,
-                lastname:newUser.lastname,
-                institution:newUser.institution
-            }}
-        )
-    
-
+        { _id: userId },
+        { $set: {
+            firstname: newUser.firstname,
+            lastname: newUser.lastname,
+            institution: newUser.institution
+        }}
+    )
 }
 
-module.exports.comparePassword = async function(candidatePassword, hash){
+module.exports.comparePassword = async function(candidatePassword, hash) {
     return await bcrypt.compare(candidatePassword, hash)
 }
 
-module.exports.verifyEmail = async function(userId, code){
+// Verify a user's email address with the given verification code.
+// Returns true if the user was successfully verified,
+// Returns false if the code is incorrect or expired.
+module.exports.verifyEmail = async function(userId, code) {
     
-    var user = await Users.findById(userId)
+    const user = await Users.findById(userId)
+    if (!user) return false
     
-    if(code == user.verification_code && user.expiryTime < new Date()){
+    if (code == user.verification_code && user.expiryTime < new Date()) {
         await Users.updateOne(
-            {_id:userId},
-            {$set: {is_verified:true}}
-            )
+            { _id: userId },
+            { $set: { is_verified: true }}
+        )
         
         return true
     }
-    else{
+    else {
         return false
     }
 }
 
-module.exports.createVerification = async function(userId){
-    var num = rand(100000, 9999999)
-    verificationString = String(num).padStart(7, '0')
-    var expiryTime = new Date() + 10 + 60 * 1000
+// Generate a verification code to verify the user's email address
+// and update the active code in the user's data.
+// Returns the code generated.
+module.exports.createVerification = async function(userId) {
+    const num = rand(100000, 9999999)
+    const verificationString = String(num).padStart(7, '0')
+    const expiryTime = new Date() + 10 + 60 * 1000
     await Users.updateOne(
-        {_id:userId},
-        {$set: {verification_code:verificationString,
-                verification_timeout:expiryTime
-              }
-        }
+        { _id: userId },
+        { $set: {
+            verification_code: verificationString,
+            verification_timeout: expiryTime
+        }}
     )
     return verificationString
 }
-module.exports.getInvites = async function(userId){
+
+module.exports.getInvites = async function(userId) {
     return await Users.findById(userId).invites
 }
 
-module.exports.createInvite = async function(userId, teamId){
-    Users.updateOne({
-        _id: userId
-      }, {
-        $addToSetid:
-         {
-            invites:teamId
-         }
-      })
+module.exports.createInvite = async function(userId, teamId) {
+    await Users.updateOne(
+        { _id: userId },
+        { $addToSetid: { invites: teamId }}
+    )
 }
 
-module.exports.deleteInvite = async function(userId,teamId){
-    await Users.updateOne({
-        _id: userId
-      }, {
-        $pull:
-         {
-          invites : teamId
-        }
-      })
+module.exports.deleteInvite = async function(userId,teamId) {
+    await Users.updateOne(
+        { _id: userId },
+        { $pull: { invites: teamId }}
+    )
 }

@@ -1,66 +1,104 @@
 const mongoose = require('mongoose')
-const bcrypt = require('bcryptjs')
-const config = require('../utils/config.js')
-const uniqueValidator = require('mongoose-unique-validator')
 
+const Date = mongoose.Schema.Types.Date
 const ObjectId = mongoose.Schema.Types.ObjectId
 
 const Entry = mongoose.Schema({
-
-    location: {lat: Number,
-               long: Number},
-    age:{
-        type:String,
-        enum:['<15','15-30','30-45','45-60','60+']
+    location: {
+        latitude: {
+            type: Number,
+            required: true
+        },
+        longitude: {
+            type: Number,
+            required: true
+        }
     },
-    posture:{
-        type:String,
-        enum:['sitting(formal)','sitting(informal)','standing','laying']
+    age: {
+        type: String,
+        enum: ['<15','15-30','30-45','45-60','60+'],
+        required: true
     },
-    activity:{
-        type:String,
-        enum:['waiting','eating','talking','exercising']
+    posture: {
+        type: String,
+        enum: ['sitting(formal)','sitting(informal)','standing','laying'],
+        required: true
     },
-    time:{type:String},
+    activity: {
+        type: String,
+        enum: ['waiting','eating','talking','exercising'],
+        required: true
+    },
+    time: {
+        type: Date,
+        required: true
+    }
 })
 
 
 const stationary_schema = mongoose.Schema({
-    project:{type:ObjectId},
-    owner:{type:ObjectId},
-    area:{type:ObjectId},
-    claimed:{type:Boolean,
-             default:false},
-    start_time:{type:String},
-    end_time:{type:String},
-    data:{type:[Entry]},
-    complete:{type:Boolean,
-              default:false}
+    project: {
+        type: ObjectId,
+        required: true
+    },
+    owner: {
+        type: ObjectId,
+        required: true
+    },
+    area: {
+        type: ObjectId,
+        required: true
+    },
+    claimed: {
+        type: Boolean,
+        default: false
+    },
+    start_time: {
+        type: Date,
+        required: true
+    },
+    end_time: Date,
+    data: [Entry],
+    complete: {
+        type: Boolean,
+        default: false
+    }
 })
 
 
-const Stationarys = module.exports = mongoose.model('Stationary_Maps', stationary_schema)
+const Maps = module.exports = mongoose.model('Stationary_Maps', stationary_schema)
 
-module.exports.addMap = async function addTest(newMap){
+module.exports.addMap = async function(newMap) {
     return await newMap.save()
 }
 
-module.exports.addEntry = async function(testId, marker){
+module.exports.deleteMap = async function(mapId) {
+    return await Maps.findByIdAndDelete(mapId)
+}
+
+module.exports.projectCleanup = async function(projectId) {
+    return await Maps.deleteMany({ project: projectId })
+}
+
+module.exports.addEntry = async function(mapId, newEntry) {
+    return await Maps.updateOne(
+        { _id: mapId },
+        { $push: { data: newEntry }}
+    )
+}
+
+module.exports.deleteEntry = async function(testId, markerId) {
 
 }
 
-module.exports.deleteEntry = async function(testId, markerId){
+module.exports.claim = async function(testId, userId) {
 
 }
 
-module.exports.claim = async function(testId, userId){
+module.exports.complete = async function(testId) {
 
 }
 
-module.exports.complete = async function(testId){
-
-}
-
-module.exports.getData = async function(testId){
+module.exports.getData = async function(testId) {
 
 }

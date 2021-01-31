@@ -28,7 +28,7 @@ class ActivitySignUp extends Component {
 
             location: project.subareas[0].area[0], // pick the first point for now
             area: project.subareas[0].area,
-            positionNameArray: nameArray
+            positionNameArray: nameArray,
         }
 
         this.openPrevPage = this.openPrevPage.bind(this);
@@ -71,7 +71,17 @@ class ActivitySignUp extends Component {
     render() {
 
         const signUpCard = ({item, index}) => (
-            <SignUpCard item={item} names={this.state.positionNameArray}/>
+            <SignUpCard 
+                navigation={this.props.navigation}
+                item={item}
+                names={this.state.positionNameArray}
+                activityDetails={({
+                    location: this.state.location,
+                    area: this.state.area,
+                    markers: this.state.standingPoints
+                })}
+                setStartTime={this.props.setStartTime}
+                />
         );
 
         return(
