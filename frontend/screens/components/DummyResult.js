@@ -6,18 +6,18 @@ import styles from './dummyResultStyles.js';
 class DummyResult extends Component {
 
     constructor(props) {
-        super(props);
+		super(props);
 
         this.state = {
             checked: false,
             added: false,
         }
-
-        this.onCheckBoxPress = this.onCheckBoxPress.bind(this);
 	}
 	
 	async onResultsPress() {
-		this.props.navigation.navigate("ResultsScreen");
+		await this.props.setProjectIndex(this.props.projectIndex);
+		await this.props.setProjectIndex(this.props.projectIndex);
+		await this.props.navigation.navigate("ResultsScreen");
 	}
 
     async onCheckBoxPress() {
@@ -64,7 +64,7 @@ class DummyResult extends Component {
             if (this.props.compare)
             {
                 return(
-                    <CheckBox checked={this.state.checked} onChange={this.onCheckBoxPress} status={'control'} style={styles.resultBoxCheckBox}/>
+                    <CheckBox checked={this.state.checked} onChange={() => this.onCheckBoxPress()} status={'control'} style={styles.resultBoxCheckBox}/>
                 );
             }
             else
@@ -85,7 +85,7 @@ class DummyResult extends Component {
 					style={styles.resultBox} 
 					appearance={"outline"} 
 					status={"basic"}
-					onPress={this.onResultsPress}
+					onPress={() => this.onResultsPress()}
 				>
 					<Text category={'s1'} style={styles.resultBoxText}>
 						{this.props.projectArea}

@@ -96,6 +96,8 @@ class HomeScreen extends Component {
 						compareDecrement={this.compareDecrement}
 						addProject={this.addToSelectedProjects}
 						removeProject={this.props.removeFromSelectedProjects}
+						projectIndex={0}
+						setProjectIndex={this.props.setResultProjectIndex}
 						projectArea={"Lake Lilian"}
 						projectComment={"Pavillion at Lake Lilian"}
 						/>
@@ -108,6 +110,8 @@ class HomeScreen extends Component {
 						compareDecrement={this.compareDecrement}
 						addProject={this.addToSelectedProjects}
 						removeProject={this.props.removeFromSelectedProjects}
+						projectIndex={1}
+						setProjectIndex={this.props.setResultProjectIndex}
 						projectArea={"Lake Eola"}
 						projectComment={"East side of Lake Eola"}
 						/>
@@ -120,6 +124,8 @@ class HomeScreen extends Component {
 						compareDecrement={this.compareDecrement}
 						addProject={this.addToSelectedProjects}
 						removeProject={this.props.removeFromSelectedProjects}
+						projectIndex={2}
+						setProjectIndex={this.props.setResultProjectIndex}
 						projectArea={"J. Blanchard Park"}
 						projectComment={"First mile of trails"}
 						/>

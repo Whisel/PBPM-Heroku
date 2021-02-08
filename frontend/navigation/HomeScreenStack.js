@@ -9,11 +9,36 @@ const HomeStack = createStackNavigator();
 class HomeScreenStack extends Component {
 
     constructor(props){
-        super(props);
+		super(props);
+		
+		// Dummy results used to test home screen
+		dummy1 = {
+			title: "Lake Lillian",
+			description: "Pavillion at Lake Lilian",
+			area: 0,
+			subareas: [],
+			activities: [],
+		};
+
+		dummy2 = {
+			title: "Lake Eola",
+			description: "East side of Lake Eola",
+			area: 0,
+			subareas: [],
+			activities: [],
+		};
+
+		dummy3 = {
+			title: "J. Blanchard Park",
+			description: "First mile of trails",
+			area: 0,
+			subareas: [],
+			activities: [],
+		};
 
         this.state = {
 			selectedProjects: [],
-			allProjects: [],
+			allProjects: [dummy1, dummy2, dummy3],
 			selectedProjectIndex: -1
         }
 
@@ -43,7 +68,7 @@ class HomeScreenStack extends Component {
         })
 	}
 	
-	setProjectIndex = async(index) => {
+	setResultProjectIndex = async(index) => {
 		this.setState({selectedProjectIndex: index})
 	}
 
@@ -56,12 +81,13 @@ class HomeScreenStack extends Component {
                     options={{headerShown: false}}
                 >
                     {props => <HomeScreen {...props}
-                                selectedProjects={this.state.selectedProjects}
-                                setProjects={this.getSelectedProjects}
-                                navigation={this.props.navigation}
-                                location = {this.props.location}
-                                removeFromSelectedProjects ={this.removeFromSelectedProjects}
-								setProjectIndex = {this.setProjectIndex}>
+                                selectedProjects = {this.state.selectedProjects}
+                                setProjects = {this.getSelectedProjects}
+                                navigation = {this.props.navigation}
+								location = {this.props.location}
+								allProjects = {this.state.allProjects}
+                                removeFromSelectedProjects = {this.removeFromSelectedProjects}
+								setResultProjectIndex = {this.setResultProjectIndex}>
                                 </HomeScreen>}
                 </HomeStack.Screen>
 
