@@ -3,58 +3,81 @@ const mongoose = require('mongoose')
 const supertest = require('supertest')
 const api = supertest(app)
 const th = require('./test_helper')
-const Team = require('../models/teams')
+const Project = require('../models/projects')
 const User = require('../models/users')
 
 
-const baseUrl = '/api/teams'
+const baseUrl = '/api/projects'
 
 // const testUser = {
-//     firstname: 'Ron',
+//     firstname: 'John',
 //     lastname: 'Doe',
-//     email: 'testdfdafarooo@yahoo.com',
+//     institution: 'University of Central Florida',
+//     email: 'test@yahoo.com',
 //     password: '1#Aadmin'
 // }
 
-const testUser = {
-    firstname: 'John',
-    lastname: 'Doe',
-    institution: 'University of Central Florida',
-    email: 'test@yahoo.com',
-    password: '1#Aadmin'
-}
 const mockObjectId = new mongoose.Types.ObjectId();
+const teamId = new mongoose.Types.ObjectId('6265b5f7fef8fc5ad4ebb63e');
+const standingPointsId = new mongoose.Types.ObjectId('6265d737dc628b7c7ae00c80')
+const areaId = new mongoose.Types.ObjectId('6265dfabdc628b7c7ae00c81')
 
 
+describe('When creating a project', () => {
 
-describe('When creating a team', () => {
-    beforeAll(async () => {
-        // Begin with a known user record in the database
-        await User.deleteMany({})
-        const user = new User({
-            firstname: testUser.firstname,
-            lastname: testUser.lastname,
-            institution: testUser.institution,
-            email: testUser.email,
-            password: testUser.password
-        })
-        await User.addUser(user)
-        token = th.getToken(user)
-    })
+    // beforeEach(async () => {
+    //     // Begin each test with a known user record in the database
+
+    //     // await User.deleteMany({})
+    //     // const user = new User({
+    //     //     firstname: testUser.firstname,
+    //     //     lastname: testUser.lastname,
+    //     //     institution: testUser.institution,
+    //     //     email: testUser.email,
+    //     //     password: testUser.password
+    //     // })
+    //     // await User.addUser(user)
+    //     // token = th.getToken(user)
+    //     // console.log(token)
+        
+    // })
     
     test('Creation succeeds', async () => {
-        await Team.deleteMany({})
-        const testTeam = {
+
+       //points is an object array of lat and long
+       //standingpoints is an array of lat, long, and title
+       //they are not the same.
+       
+       const area = new Array(2).fill({
+            longitude: -81.19861073791981,
+            latitude: 28.60323859747802
+        })
+       
+
+       const standingPoints = new Array(1).fill({
+           longitude:-81.19861073791981,
+           latitude:28.60323859747802,
+           title: 'circle'
+       }) 
+
+       testUser = await User.findUserByEmail('test@yahoo.com')
+
+        token = th.getToken(testUser)
+        console.log(token)
+
+        const testProj = {
             title: 'New Project',
             description: 'Its a secret',
-            user: testUser,
-            public: false
+            points: area,
+            standingPoints: standingPoints,
+            team: teamId,
+            user: testUser
         }
 
         const response = await api
             .post(`${baseUrl}`)
             .set('Authorization', 'Bearer ' + token)
-            .send(testTeam)
+            .send(testProj)
             // Confirm successful login
             .expect(201)
             .expect('Content-Type', /application\/json/)
