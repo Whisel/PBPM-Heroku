@@ -4,17 +4,14 @@ const uniqueValidator = require('mongoose-unique-validator')
 const Date = mongoose.Schema.Types.Date
 const ObjectId = mongoose.Schema.Types.ObjectId
 
-const Moving_Map = require('../models/moving_maps.js')
-const Area = require('../models/areas.js')
-// const { collection } = require('./surveys.js')
+const Nature_Maps = require('./nature_maps.js')
+const Area = require('./areas.js')
+const { collection } = require('./surveys.js')
 
+// Document Schema for Nature Collections.  Maps references Nature Maps Schema
 
 const collection_schema = mongoose.Schema({
     title: String,
-    date: {
-        type: Date,
-        required: true
-    },
 
     area: {
         type: ObjectId,
@@ -30,15 +27,16 @@ const collection_schema = mongoose.Schema({
 
     maps: [{
         type: ObjectId,
-        ref: 'Moving_Maps'
+        ref: 'Nature_Maps'
     }]
 
 })
+//end
 
-const Collection = module.exports = mongoose.model('Moving_Collections', collection_schema)
+const Collection = module.exports = mongoose.model('Nature_Collections', collection_schema)
 
 module.exports.deleteMap = async function(collectionId, mapId){
-    await Moving_Map.deleteMap(mapId)
+    await Nature_Maps.deleteMap(mapId)
     return await Collection.updateOne(
         { _id: collectionId },
         { $pull: { maps: mapId}}
@@ -50,7 +48,7 @@ module.exports.deleteCollection = async function(collectionId){
     collection = await Collection.findById(collectionId)
     await Area.removeRefrence(collection.area)
     for(var i = 0; i < collection.maps.length; i++)
-        await Moving_Map.findByIdAndDelete(collection.maps[i])
+        await Nature_Maps.findByIdAndDelete(collection.maps[i])
 
     return await Collection.findByIdAndDelete(collectionId)
 }

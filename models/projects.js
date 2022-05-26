@@ -9,6 +9,11 @@ const Survey = require('../models/surveys.js')
 const Stationary_Collection = require('../models/stationary_collections.js')
 const Moving_Collection = require('../models/moving_collections.js')
 const Survey_Collection = require('../models/survey_collections.js')
+const Sound_Collection = require('../models/sound_collections.js')
+const Nature_Collection = require('../models/nature_collections.js')
+const Light_Collection = require('../models/light_collections.js')
+const Boundaries_Collection = require('../models/boundaries_collections.js')
+const Order_Collection = require('../models/order_collections.js')
 
 
 const ObjectId = mongoose.Schema.Types.ObjectId
@@ -46,11 +51,31 @@ const project_schema = mongoose.Schema({
         type: ObjectId,
         ref: 'Moving_Collections'
     }],
+    soundCollections:[{
+        type: ObjectId,
+        ref: 'Sound_Collections'
+    }],
+    // natureCollections:[{
+    //     type: ObjectId,
+    //     required: true,
+    //     ref: 'Nature_Collections'
+    // }],
+    // lightCollections:[{
+    //     type: ObjectId,
+    //     ref: 'Light_Collections'
+    // }],
+    // boundariesCollections:[{
+    //     type: ObjectId,
+    //     ref: 'Boundaries_Collections'
+    // }],
+    // orderCollections:[{
+    //     type: ObjectId,
+    //     ref: 'Order_Collections'
+    // }],
     surveyCollections:[{
         type: ObjectId,
         ref: 'Survey_Collections'
     }],
-
 })
 
 project_schema.plugin(uniqueValidator)
@@ -87,7 +112,7 @@ module.exports.deleteProject = async function(projectId) {
         await Standing_Point.removeRefrence(project.standingPoints[i])
 
     for(var i = 0; i < project.stationaryCollections.length; i++)   
-        await Stationary_collections.deleteCollection(project.stationaryCollections[i])
+        await Stationary_Collections.deleteCollection(project.stationaryCollections[i])
 
     return await Projects.findByIdAndDelete(projectId)
 }
@@ -131,6 +156,22 @@ module.exports.deleteMovingCollection = async function(projectId, collectionId) 
    return await Moving_Collection.deleteCollection(collectionId)
 }
 
+module.exports.addSoundCollection = async function (projectId, collectionId) {
+    return await Projects.updateOne(
+       { _id: projectId },
+       { $push: { soundCollections:  collectionId}}
+   )
+}
+
+module.exports.deleteSoundCollection = async function(projectId, collectionId) {
+   
+   await Projects.updateOne(
+       { _id: projectId },
+       { $pull: { soundCollections: collectionId}}
+   )
+   return await Sound_Collection.deleteCollection(collectionId)
+}   
+
 module.exports.addSurveyCollection = async function (projectId, collectionId) {
     return await Projects.updateOne(
        { _id: projectId },
@@ -146,6 +187,71 @@ module.exports.deleteSurveyCollection = async function(projectId, collectionId) 
    )
    return await Survey_Collection.deleteCollection(collectionId)
 }    
+
+module.exports.addNatureCollection = async function (projectId, collectionId) {
+    return await Projects.updateOne(
+       { _id: projectId },
+       { $push: { natureCollections:  collectionId}}
+   )
+}
+
+module.exports.deleteNatureCollection = async function(projectId, collectionId) {
+   
+   await Projects.updateOne(
+       { _id: projectId },
+       { $pull: { natureCollections: collectionId}}
+   )
+   return await Nature_Collection.deleteCollection(collectionId)
+}   
+
+module.exports.addLightCollection = async function (projectId, collectionId) {
+    return await Projects.updateOne(
+       { _id: projectId },
+       { $push: { lightCollections:  collectionId}}
+   )
+}
+
+module.exports.deleteLightCollection = async function(projectId, collectionId) {
+   
+   await Projects.updateOne(
+       { _id: projectId },
+       { $pull: { lightCollections: collectionId}}
+   )
+   return await Light_Collection.deleteCollection(collectionId)
+}  
+
+module.exports.addBoundariesCollection = async function (projectId, collectionId) {
+    return await Projects.updateOne(
+       { _id: projectId },
+       { $push: { boundariesCollections:  collectionId}}
+   )
+}
+
+module.exports.deleteBoundariesCollection = async function(projectId, collectionId) {
+   
+   await Projects.updateOne(
+       { _id: projectId },
+       { $pull: { boundariesCollections: collectionId}}
+   )
+   return await Boundaries_Collection.deleteCollection(collectionId)
+}   
+
+module.exports.addOrderCollection = async function (projectId, collectionId) {
+    return await Projects.updateOne(
+       { _id: projectId },
+       { $push: { orderCollections:  collectionId}}
+   )
+}
+
+module.exports.deleteOrderCollection = async function(projectId, collectionId) {
+   
+   await Projects.updateOne(
+       { _id: projectId },
+       { $pull: { orderCollections: collectionId}}
+   )
+   return await Order_Collection.deleteCollection(collectionId)
+}   
+
 
 module.exports.addArea = async function(projectId, areaId) {
     return await Projects.updateOne(
