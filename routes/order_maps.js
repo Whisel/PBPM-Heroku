@@ -1,8 +1,8 @@
 const express = require('express')
 const router = express.Router()
-const Map = require('../models/stationary_maps.js')
+const Map = require('../models/order_maps.js')
 const Project = require('../models/projects.js')
-const Stationary_Collection = require('../models/stationary_collections.js')
+const Order_Collection = require('../models/order_collections.js')
 const Team = require('../models/teams.js')
 const Points = require('../models/standing_points.js')
 const passport = require('passport')
@@ -33,9 +33,9 @@ router.post('', passport.authenticate('jwt',{session:false}), async (req, res, n
                 })
 
                 const map = await Map.addMap(newMap)
-                await Stationary_Collection.addActivity(req.body.collection, map._id)
+                await Order_Collection.addActivity(req.body.collection, map._id)
 
-                res.status(201).json(await Stationary_Collection.findById(req.body.collection))
+                res.status(201).json(await Order_Collection.findById(req.body.collection))
             }
 
         let newMap = new Map({
@@ -48,7 +48,7 @@ router.post('', passport.authenticate('jwt',{session:false}), async (req, res, n
             maxResearchers: req.body.maxResearchers,
         })
         const map = await Map.addMap(newMap)
-        await Stationary_Collection.addActivity(req.body.collection,map._id)
+        await Order_Collection.addActivity(req.body.collection,map._id)
         res.status(201).json(map)
 
     }
@@ -64,7 +64,7 @@ router.get('/:id', passport.authenticate('jwt',{session:false}), async (req, res
                            .populate([
                                {
                                    path:'sharedData',
-                                   model:'Stationary_Collections',
+                                   model:'Order_Collections',
                                    select:'title duration',
                                    populate: {
                                     path: 'area',
@@ -135,7 +135,8 @@ router.delete('/:id', passport.authenticate('jwt',{session:false}), async (req, 
     map = await Map.findById(req.params.id)
     project = await Project.findById(map.project)
     if(await Team.isAdmin(project.team,user._id)){
-        res.json(await Stationary_Collection.deleteMap(map.sharedData,map._id))
+        res.json(await Order_Collection.deleteMap(map.sharedData,map._id))
+
         
     }
     else{
@@ -174,16 +175,16 @@ router.put('/:id/data/:data_id', passport.authenticate('jwt',{session:false}), a
         const newData = {
             _id: oldData._id,
             location: (req.body.location ? req.body.location : oldData.location),
-            age: (req.body.age ? req.body.age : oldData.age),
-            gender: (req.body.gender ? req.body.gender : oldData.gender),
-            posture: (req.body.posture ? req.body.posture : oldData.posture),
-            activity: (req.body.activity ? req.body.activity : oldData.activity),
+            garbage_can: (req.body.garbage_can ? req.body.garbage_can : oldData.garbage_can),
+            building_condition: (req.body.building_condition ? req.body.building_condition : oldData.building_condition),
+            area_lighting: (req.body.area_lighting ? req.body.area_lighting : oldData.area_lighting),
+            description: (req.body.description ? req.body.description : oldData.description),
             standingPoint: (req.body.standingPoint ? req.body.standingPoint : oldData.standingPoint),
             time: (req.body.time ? req.body.time : oldData.time)
         }
 
-        if (req.body.activity.length > 2)
-            throw new BadRequestError('Datapoints can only have two activies')
+        if (req.body.area_lighting.length > 1)
+            throw new BadRequestError('Datapoints can only have one description for area lighting')
 
         if(req.body.standingPoint){
             Points.addRefrence(req.body.standingPoint)

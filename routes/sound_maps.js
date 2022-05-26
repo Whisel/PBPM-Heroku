@@ -1,8 +1,8 @@
 const express = require('express')
 const router = express.Router()
-const Map = require('../models/stationary_maps.js')
+const Map = require('../models/sound_maps.js')
 const Project = require('../models/projects.js')
-const Stationary_Collection = require('../models/stationary_collections.js')
+const Sound_Collection = require('../models/sound_collections.js')
 const Team = require('../models/teams.js')
 const Points = require('../models/standing_points.js')
 const passport = require('passport')
@@ -33,9 +33,9 @@ router.post('', passport.authenticate('jwt',{session:false}), async (req, res, n
                 })
 
                 const map = await Map.addMap(newMap)
-                await Stationary_Collection.addActivity(req.body.collection, map._id)
+                await Sound_Collection.addActivity(req.body.collection, map._id)
 
-                res.status(201).json(await Stationary_Collection.findById(req.body.collection))
+                res.status(201).json(await Sound_Collection.findById(req.body.collection))
             }
 
         let newMap = new Map({
@@ -48,7 +48,7 @@ router.post('', passport.authenticate('jwt',{session:false}), async (req, res, n
             maxResearchers: req.body.maxResearchers,
         })
         const map = await Map.addMap(newMap)
-        await Stationary_Collection.addActivity(req.body.collection,map._id)
+        await Sound_Collection.addActivity(req.body.collection,map._id)
         res.status(201).json(map)
 
     }
@@ -64,7 +64,7 @@ router.get('/:id', passport.authenticate('jwt',{session:false}), async (req, res
                            .populate([
                                {
                                    path:'sharedData',
-                                   model:'Stationary_Collections',
+                                   model:'Sound_Collections',
                                    select:'title duration',
                                    populate: {
                                     path: 'area',
@@ -135,7 +135,8 @@ router.delete('/:id', passport.authenticate('jwt',{session:false}), async (req, 
     map = await Map.findById(req.params.id)
     project = await Project.findById(map.project)
     if(await Team.isAdmin(project.team,user._id)){
-        res.json(await Stationary_Collection.deleteMap(map.sharedData,map._id))
+        res.json(await Sound_Collection.deleteMap(map.sharedData,map._id))
+
         
     }
     else{
@@ -173,17 +174,18 @@ router.put('/:id/data/:data_id', passport.authenticate('jwt',{session:false}), a
 
         const newData = {
             _id: oldData._id,
-            location: (req.body.location ? req.body.location : oldData.location),
-            age: (req.body.age ? req.body.age : oldData.age),
-            gender: (req.body.gender ? req.body.gender : oldData.gender),
-            posture: (req.body.posture ? req.body.posture : oldData.posture),
-            activity: (req.body.activity ? req.body.activity : oldData.activity),
-            standingPoint: (req.body.standingPoint ? req.body.standingPoint : oldData.standingPoint),
+            decibel_1: (req.body.decibel_1 ? req.body.decibel_1 : oldData.decibel_1),
+            decibel_2: (req.body.decibel_2 ? req.body.decibel_2 : oldData.decibel_2),
+            decibel_3: (req.body.decibel_3 ? req.body.decibel_3 : oldData.decibel_3),
+            decibel_4: (req.body.decibel_4 ? req.body.decibel_4 : oldData.decibel_4),
+            decibel_5: (req.body.decibel_5 ? req.body.decibel_5 : oldData.decibel_5),
+            average: (req.body.average ? req.body.average : oldData.average),
+            sound_type: (req.body.sound_type ? req.body.sound_type : oldData.sound_type),
             time: (req.body.time ? req.body.time : oldData.time)
         }
 
-        if (req.body.activity.length > 2)
-            throw new BadRequestError('Datapoints can only have two activies')
+        if (req.body.sound_type.length > 2)
+            throw new BadRequestError('Datapoints can only have one sound type')
 
         if(req.body.standingPoint){
             Points.addRefrence(req.body.standingPoint)
