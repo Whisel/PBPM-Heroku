@@ -41,7 +41,32 @@ function Title() {
     event.preventDefault();
   };
 
-  const loginUser = () => { }
+  const loginUser = async () => {
+
+    let success = false;
+    let res = null;
+
+    try {
+
+        const response = await fetch('https://measuringplacesd.herokuapp.com/api/login', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                    'Content-Type': 'application/json',
+            },
+            body: {
+                email: values.email,
+                password: values.password
+            }
+        });
+        res = JSON.parse(await response.text());
+        success = res.success;
+    } catch (error) {
+        console.log("ERROR: ", error);
+        success = false;
+    }
+
+   }
 
   return (
     <div className='titlePage'>
