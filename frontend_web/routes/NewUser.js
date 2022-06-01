@@ -62,6 +62,8 @@ function NewUser(){
                         'Content-Type': 'application/json',
                 },
                 body: {
+                    fname: values.fname,
+                    lname: values.lname,
                     email: values.email,
                     password: values.password
                 }
