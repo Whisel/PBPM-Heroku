@@ -48,7 +48,32 @@ function NewUser(){
         event.preventDefault();
     };
 
-    const submitNewUser = () => {}
+    const submitNewUser = async () => {
+        var bp = require('./Path.js');
+        let success = false;
+        let res = null;
+
+        try        
+        {            
+            const response = await fetch(bp.buildPath('api/adduser'),            
+                {method:'POST',
+                header: {
+                    Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                },
+                body: {
+                    email: values.email,
+                    password: values.password
+                }
+            });
+            res = JSON.parse(await response.text());
+            success = res.success;           
+        }
+        catch (error) {
+            console.log("ERROR: ", error);
+            success = false;
+        }
+    };
 
     return(
         <div id='newUser'>
