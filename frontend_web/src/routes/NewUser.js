@@ -67,7 +67,17 @@ function NewUser(){
                 }
             });
             res = JSON.parse(await response.text());
-            success = res.success;            
+            success = res.success;
+            
+            if( res.error.length > 0 )            
+            {                
+                setMessage( "API Error:" + res.error );            
+            }            
+            else            
+            {                
+                setMessage('Registration successful. Welcome!');
+                window.location.href = '/completeregister';
+            }              
         }
         catch (error) {
             console.log("ERROR: ", error);
