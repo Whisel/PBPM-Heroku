@@ -49,14 +49,13 @@ function NewUser(){
     };
 
     const submitNewUser = async () => {
-        var bp = require('./Path.js');
         let success = false;
         let res = null;
 
         try        
         {            
-            const response = await fetch(bp.buildPath('api/adduser'),            
-                {method:'POST',
+            const response = await fetch('https://measuringplacesd.herokuapp.com/api/adduser', {
+                method:'POST',
                 header: {
                     Accept: 'application/json',
                         'Content-Type': 'application/json',
