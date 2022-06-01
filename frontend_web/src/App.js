@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import Title from './Title';
-import Home from '../routes/Home';
+import Home from './routes/Home';
 import MapPage from './routes/MapPage';
 import AppNavBar from './components/AppNavBar';
 import TabPanel from './components/ProjectTabPanel';

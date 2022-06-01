@@ -20,6 +20,9 @@ import logo2 from './images/construction.jpeg';
 
 function Title() {
 
+  var bp = require('./routes/Path.js')
+  //var storage = require('.../tokenStorage.js')
+
   const [values, setValues] = React.useState({
     email: '',
     password: '',
