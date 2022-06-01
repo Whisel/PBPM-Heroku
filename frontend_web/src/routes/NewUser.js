@@ -48,7 +48,7 @@ function NewUser(){
         event.preventDefault();
     };
 
-    const submitNewUser = async () => {
+    const submitNewUser = () => {
         var bp = require('./Path.js');
         let success = false;
         let res = null;
