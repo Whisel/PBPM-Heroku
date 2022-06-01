@@ -2,6 +2,7 @@
   "name": "measuring-place-backend",
   "version": "1.0.0",
   "description": "",
+  "engines":{"node": "18.2.0"},
   "main": "index.js",
   "homepage": "https://measuringplacesd.herokuapp.com/",
   "scripts": {
