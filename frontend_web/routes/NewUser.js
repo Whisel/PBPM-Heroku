@@ -48,42 +48,7 @@ function NewUser(){
         event.preventDefault();
     };
 
-    const submitNewUser = () => {
-        var bp = require('./Path.js');
-        let success = false;
-        let res = null;
-
-        try        
-        {            
-            const response = await fetch(bp.buildPath('api/adduser'),            
-                {method:'POST',
-                header: {
-                    Accept: 'application/json',
-                        'Content-Type': 'application/json',
-                },
-                body: {
-                    email: values.email,
-                    password: values.password
-                }
-            });
-            res = JSON.parse(await response.text());
-            success = res.success;
-            
-            if( res.error.length > 0 )            
-            {                
-                setMessage( "API Error:" + res.error );            
-            }            
-            else            
-            {                
-                setMessage('Registration successful. Welcome!');
-                window.location.href = '/completeregister';
-            }              
-        }
-        catch (error) {
-            console.log("ERROR: ", error);
-            success = false;
-        }
-    }
+    const submitNewUser = () => {}
 
     return(
         <div id='newUser'>
