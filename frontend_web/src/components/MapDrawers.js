@@ -3,79 +3,50 @@ import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
 import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import Close from '@mui/icons-material/Close';
-
+import Switch from '@mui/material/Switch';
+import TableContainer from '@mui/material/TableContainer';
+import Paper from '@mui/material/Paper';
+import ActivityTable from './ActivityTable';
 import './controls.css';
 
-export default function MapDrawer() {
-    const drawers = [
-        {
-            anchor: 'left',
-            name: 'Activities',
-            categories: [
-                {
-                    type: 'Aoo',
-                    dates: ['2/22/22', '3/5/22', '11/20/21']
-                },
-                {
-                    type: 'B',
-                    dates: ['2/29/22', '4/1/22', '12/2/21']
-                },
-                {
-                    type: 'L',
-                    dates: []
-                },
-                {
-                    type: 'N',
-                    dates: []
-                },
-                {
-                    type: 'So',
-                    dates: []
-                }
-            ]
-        },
-        {
-            anchor: 'right',
-            name: 'Graphs',
-            categories: [
-                {
-                    type: '',
-                    dates: []
-                }
-            ]
-        },
-        {
-            anchor: 'bottom',
-            name: 'Data',
-            categories: [
-                {
-                    type: '',
-                    dates: []
-                }
-            ]
-        }
-    ];
+export default function MapDrawer(props) {
+    const drawers = props.drawers;
+    const [selections, setSelections] = React.useState({});
+    const [checked, setChecked] = React.useState({});
+    const [timeOpen, setTimeOpen] = React.useState({});
 
-    const testNames = {
-        Aoo: 'Absence of Order',
-        B: 'Boundaries',
-        L: 'Lighting',
-        N: 'Nature',
-        So: 'Sound'
+    const menuAnchors = {
+        Activities: 'left',
+        Graphs: 'right',
+        Data: 'bottom'
     };
 
-    const [open, setOpen] = React.useState({
-        Aoo: false, 
-        B: false, 
-        L: false, 
-        N: false, 
-        So: false
+    const testNames = {
+        stationaryCollections: 'Humans in Place',
+        movingCollections: 'Humans in Motion',
+        orderCollections: 'Absence of Order Locator',
+        boundariesCollections: 'Spatial and Shelter Boundaries',
+        lightingCollections: 'Lighting Profile',
+        natureCollections: 'Nature Prevalence',
+        soundCollections: 'Acoustical Profile'
+    };
+
+    const [dateOpen, setDateOpen] = React.useState({
+        stationaryCollections: false,
+        movingCollections: false,
+        orderCollections: false,
+        boundariesCollections: false,
+        lightingCollections: false,
+        natureCollections: false,
+        soundCollections: false
     });
 
     const [state, setState] = React.useState({
@@ -84,65 +55,135 @@ export default function MapDrawer() {
         right: false,
     });
 
-    const handleClick = (text, open) => (event) => {
-        setOpen({...open, [text]: open});
+    const handleClickDate = (text, open) => (event) => {
+        setDateOpen({...dateOpen, [text]: open});
+    };
+
+    const handleClickTime = (text, open) => (event) => {
+        setTimeOpen({ ...timeOpen, [text]: open });
     };
 
     const toggleDrawer = (anchor, open) => (event) => {
-        if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+        if (event.title === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
             return;
         }
 
         setState({ ...state, [anchor]: open });
     };
 
-    const list = (drawer) => (
+    const toggleSwitch = (category, date, time) => (event) => {
+        setChecked({ ...checked, [`${category}.${date}.${time}`]: event.target.checked});
+        // default is false has reverse setting so !checked[cat + date] must be sent
+        // selected means checked[..]=false
+        props.selection(category, date, time, !checked[`${category}.${date}.${time}`]);
+        if(!checked[`${category}.${date}.${time}`]){
+            selections[`${category}.${date}.${time}`] = drawers.Activities[category][date][time];
+        } else {
+            var delSelections = selections;
+            delete delSelections[`${category}.${date}.${time}`];
+            setSelections(delSelections);
+        }
+    };
+
+    const list = (name, drawer) => (
         <Box
-            sx={{ width: drawer.anchor === 'top' || drawer.anchor === 'bottom' ? 'auto' : 250 }}
-            id={drawer.anchor+'ListBox'}
+            sx={{ width: menuAnchors[name] === 'top' || menuAnchors[name] === 'bottom' ? 'auto' : 250 }}
+            id={menuAnchors[name]+'ListBox'}
         >
             <List>
-                {drawer.categories.map((catdrawer, index) => (
-                    <div key={catdrawer.type}>
-                        <ListItemButton key={catdrawer.type+index} onClick={handleClick(catdrawer.type, !open[catdrawer.type])}>
-                            <ListItemText primary={catdrawer.type ? testNames[catdrawer.type] : ''} />
-                            {drawer.anchor === 'left' ? (open[catdrawer.type] ? <ExpandLess /> : <ExpandMore />): null}
+                {Object.entries(drawer).map(([category, dates], index) => (
+                    <div key={category}>
+                        <ListItemButton 
+                            key={category+index} 
+                            onClick={handleClickDate(category, !dateOpen[category])}
+                        >
+                            <ListItemText primary={category ? testNames[category] : ''} />
+                            {menuAnchors[name] === 'left' ? 
+                                (dateOpen[category] ? <ExpandLess /> : <ExpandMore />): null}
                         </ListItemButton>
-                        {drawer.anchor === 'left' ? sublist(catdrawer.type, catdrawer.dates) : null}
+                        {menuAnchors[name] === 'left' ? dateList(category, dates) : null}
                     </div>
                 ))}
             </List>
         </Box>
     );
 
-    const sublist = (test, dates) => (
-        <Collapse in={open[test]} timeout='auto' unmountOnExit>
+    function dateList(title, dates){
+        return(
+            <Collapse in={dateOpen[title]} timeout='auto' unmountOnExit>
+                <List component='div' disablePadding>
+                    {Object.entries(dates).map(([date, times], index) => (
+                        <div key={date}>
+                            <ListItemButton 
+                                key={date + index} sx={{ pl: 4, bgcolor: '#dcedfc'}} 
+                                onClick={handleClickTime(date, !timeOpen[date])}
+                            >
+                                <ListItemText primary={date} />
+                                {date ? (timeOpen[date] ? <ExpandLess /> : <ExpandMore />):null }
+                            </ListItemButton>
+                            {timeList(title, date, times)}
+                        </div>
+                    ))}
+                </List>
+            </Collapse>
+        );
+   };
+
+    const timeList = (title, date, times) => (
+        <Collapse in={timeOpen[date]} timeout='auto' unmountOnExit>
             <List component='div' disablePadding>
-                {dates.map((text, index) => (
-                    <ListItemButton key={text+''+index} sx={{ pl: 4 }}>
-                        <ListItemText primary={text} />
-                    </ListItemButton>
-                ))}
+                {
+                    Object.keys(times).map((time, index) => (
+                        time ? <ListItem key={date + time + index} sx={{ pl: 4, bgcolor: '#aed5fa' }}>
+                            <FormControlLabel 
+                                control={<Switch 
+                                checked={checked[`${title}.${date}.${time}`] ? 
+                                    checked[`${title}.${date}.${time}`] : false} 
+                                onChange={toggleSwitch(title, date, time, checked[`${title}${date}${time}`])} />} 
+                                label={time} 
+                            />
+                        </ListItem> : null
+                    ))
+                }
             </List>
         </Collapse>
     );
 
+    const dataDrawer = (selections) => (
+        <TableContainer component={Paper}> 
+            <ActivityTable type={1} activity={selections}/>
+        </TableContainer>
+    );
+
     return (
         <div id='projectFrame'>
-            {drawers.map((drawer) => (
-                <React.Fragment key={drawer.anchor}>
-                    <Button id={drawer.anchor+'Button'} onClick={toggleDrawer(drawer.anchor, !state[drawer.anchor])}>
-                        {drawer.name}
+            {Object.entries(drawers).map(([name, data]) => (
+                <React.Fragment key={menuAnchors[name]}>
+                    <Button 
+                        id={menuAnchors[name] + 'Button'} 
+                        onClick={toggleDrawer(menuAnchors[name], !state[menuAnchors[name]])}
+                    >
+                        {name}
                     </Button>
                     <Drawer
-                        id={drawer.anchor+'Drawer'}
-                        anchor={drawer.anchor}
-                        open={state[drawer.anchor]}
-                        onClose={toggleDrawer(drawer.anchor, false)}
+                        id={menuAnchors[name]+'Drawer'}
+                        anchor={menuAnchors[name]}
+                        open={state[menuAnchors[name]]}
+                        onClose={toggleDrawer(menuAnchors[name], false)}
                         hideBackdrop={true}
                     >
-                        {drawer.anchor === 'bottom' ? <Button id={drawer.anchor + 'CloseButton'} sx={{position: 'fixed', alignSelf: 'center'}} onClick={toggleDrawer(drawer.anchor, !state[drawer.anchor])}>Close <Close/></Button> : null}
-                        {list(drawer)}
+                        {menuAnchors[name] === 'bottom' ? 
+                            <Button 
+                                id={menuAnchors[name] + 'CloseButton'} 
+                                sx={{position: 'fixed', alignSelf: 'center'}} 
+                                onClick={toggleDrawer(menuAnchors[name], !state[menuAnchors[name]])}
+                            >
+                                Close <Close/>
+                            </Button> 
+                            : null}
+                        {menuAnchors[name] === 'left' ? 
+                            list(name, data) 
+                            : (menuAnchors[name] === 'bottom' ? dataDrawer(selections) : null)}
                     </Drawer>
                 </React.Fragment>
             ))}

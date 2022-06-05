@@ -11,10 +11,19 @@ import TableRow from '@mui/material/TableRow';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
+const testNames = {
+    stationaryCollections: 'Humans in Place',
+    movingCollections: 'Humans in Motion',
+    orderCollections: 'Absence of Order Locator',
+    boundariesCollections: 'Spatial and Shelter Boundaries',
+    lightingCollections: 'Lighting Profile',
+    natureCollections: 'Nature Prevalence',
+    soundCollections: 'Acoustical Profile'
+};
+
 function Row(props) {
-    const { row } = props;
-    //console.log(row.name);
-    //console.log(row.history[0].value);
+    const row = props.row;
+    const name = props.name;
     const [open, setOpen] = React.useState(false);
 
     return (
@@ -30,7 +39,7 @@ function Row(props) {
                     </IconButton>
                 </TableCell>
                 <TableCell className='catTitle' component='th' scope='row'>
-                    {row.name}
+                    {name}
                 </TableCell>
                 <TableCell> </TableCell>
                 <TableCell> </TableCell>
@@ -40,34 +49,7 @@ function Row(props) {
             <TableRow className='subtables'>
                 <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={12}>
                     <Collapse in={open} timeout='auto' unmountOnExit>
-                        <Box sx={{ margin: 1 }}>
-                            <Table size='small' aria-label='activity'>
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell colSpan={2} className='value'>Value</TableCell>
-                                        <TableCell colSpan={2} className='type'>Type</TableCell>
-                                        <TableCell>Location</TableCell>
-                                        <TableCell>Date</TableCell>
-                                        <TableCell>Surveyor</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {row.history.map((historyRow, index) => (
-                                        <TableRow key={index}>
-                                            <TableCell colSpan={2} className='value'>
-                                                {historyRow.value}
-                                            </TableCell>
-                                            <TableCell colSpan={2} className='type'>
-                                                {historyRow.type}
-                                            </TableCell>
-                                            <TableCell>{historyRow.location}</TableCell>
-                                            <TableCell>{historyRow.date}</TableCell>
-                                            <TableCell>{historyRow.surveyor}</TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </Box>
+                        {subtable(row, 0)}
                     </Collapse>
                 </TableCell>
             </TableRow>
@@ -75,27 +57,77 @@ function Row(props) {
     );
 }
 
-Row.propTypes = {
-    row: PropTypes.shape({
-        history: PropTypes.arrayOf(
-            PropTypes.shape({
-                location: PropTypes.string.isRequired,
-                date: PropTypes.string.isRequired,
-                surveyor: PropTypes.string.isRequired
-            }),
-        ).isRequired,
-    }).isRequired,
-};
+const subtable = (row, type) => (    
+    <Box sx={{ margin: 1 }}>
+        <Table size='small' aria-label='activity'>
+            <TableHead>
+                <TableRow>
+                    <TableCell colSpan={2} className='value'>{type === 0 ? 'Value' : 'Category'}</TableCell>
+                    <TableCell colSpan={type === 0 ? 2 : 1} className='type'>
+                        {type === 0 ? 'Type' : 'Value'}
+                    </TableCell>
+                    <TableCell>{type === 0 ? 'Location' : 'Type'}</TableCell>
+                    <TableCell>{type === 0 ? 'Date' : 'Location'}</TableCell>
+                    <TableCell>{type === 0 ? 'Surveyor' : 'Date'}</TableCell>
+                </TableRow>
+            </TableHead>
+            <TableBody>
+                {type === 0 ? row.map((object, index) => (
+                    <TableRow key={index}>
+                        <TableCell colSpan={2} className='value'>
+                            {object.value}
+                        </TableCell>
+                        <TableCell colSpan={2} className='type'>
+                            {object.type}
+                        </TableCell>
+                        <TableCell>{object.location}</TableCell>
+                        <TableCell>{object.date}</TableCell>
+                        <TableCell>{object.surveyor}</TableCell>
+                    </TableRow>
+                )) : Object.entries(row).map(([instance, array])=>(
+                    array.map((point, index)=>(
+                        <TableRow key={index}>
+                            <TableCell colSpan={2} className='value'>
+                                {(testNames[instance.split('.')[0]])}
+                            </TableCell>
+                            <TableCell colSpan={1} className='type'>
+                                {instance.split('.')[0] === 'soundCollections' ? 
+                                    `${point.average} dB` : 
+                                    (point.result ? 
+                                        point.result : 
+                                        (point.posture ? point.posture : 'N/A')
+                                    )
+                                }
+                            </TableCell>
+                            <TableCell></TableCell>
+                            <TableCell>Location {index}</TableCell>
+                            <TableCell>{`${instance.split('.')[1]} ${instance.split('.')[2]}`}</TableCell>
+                        </TableRow>
+                    ))
+                ))}
+            </TableBody>
+        </Table>
+    </Box>
+)
 
+Row.propTypes = {
+    row: PropTypes.arrayOf(
+        PropTypes.shape({
+            location: PropTypes.string.isRequired,
+            date: PropTypes.string.isRequired,
+            surveyor: PropTypes.string.isRequired
+        }),
+    ).isRequired,
+};
 
 function ActivityTable(props){
     /* Nested Expandable Tables */
     const activityRow = props.activity;
 
     return(
-            activityRow.map(row => (
-                <Row key={row.name} row={row} />
-            ))
+            props.type === 0 ? (Object.entries(activityRow).map(([type, array]) => (
+                <Row key={type} name={type} row={array} />
+            ))) : subtable(activityRow, 1)
     );
 }
 

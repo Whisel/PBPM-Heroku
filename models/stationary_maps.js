@@ -108,7 +108,7 @@ module.exports.deleteMap = async function(mapId) {
     const map = await Maps.findById(mapId)
 
     for(var i = 0; i < map.standingPoints.length; i++)
-        Points.removeRefrence(map.standingPoints[i])
+        await Points.removeRefrence(map.standingPoints[i])
     
     return await Maps.findByIdAndDelete(mapId)
 }
@@ -128,7 +128,7 @@ module.exports.addEntry = async function(mapId, newEntry) {
         standingPoint: newEntry.standingPoint
     })
 
-    Points.addRefrence(newEntry.standingPoint)
+    await Points.addRefrence(newEntry.standingPoint)
 
     return await Maps.updateOne(
         { _id: mapId },

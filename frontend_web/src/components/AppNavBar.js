@@ -8,7 +8,6 @@ import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import Home from '@mui/icons-material/HomeRounded';
@@ -16,8 +15,24 @@ import { Link } from 'react-router-dom';
 
 import './controls.css';
 
+// pages left incase of need for additional route info
+// uses hamburger on small viewports
 const pages = [''];
-const settings = ['Account', 'Home', 'Logout'];
+
+// Routes according to React-Router relative urls
+const settings = [
+    {
+        page: 'Account',
+        route: 'settings'
+    },
+    {
+        page: 'Logout',
+        route: '/'
+
+    }
+];
+
+//SVG Home icon link button
 const home = <Link className='homeButton' to='/u'><Home className='iconShadow'/></Link>;
 
 const AppNavBar = () => {
@@ -51,7 +66,6 @@ const AppNavBar = () => {
                     >
                         {home}
                     </Typography>
-
                     <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
                         <IconButton
                             size='large'
@@ -81,11 +95,11 @@ const AppNavBar = () => {
                                 display: { xs: 'block', md: 'none' },
                             }}
                         >
-                            {pages.map((page) => (
+                            {/*{pages.map((page) => (
                                 <MenuItem key={page} onClick={handleCloseNavMenu}>
                                     <Typography textAlign='center'>{page}</Typography>
                                 </MenuItem>
-                            ))}
+                            ))}*/}
                         </Menu>
                     </Box>
                     <Typography
@@ -96,7 +110,7 @@ const AppNavBar = () => {
                         {home}
                     </Typography>
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                        {pages.map((page) => (
+                        {/*{pages.map((page) => (
                             <Button
                                 key={page}
                                 onClick={handleCloseNavMenu}
@@ -104,9 +118,8 @@ const AppNavBar = () => {
                             >
                                 {page}
                             </Button>
-                        ))}
+                        ))}*/}
                     </Box>
-
                     <Box sx={{ flexGrow: 0 }}>
                         <Tooltip title='Open settings'>
                             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -130,8 +143,13 @@ const AppNavBar = () => {
                             onClose={handleCloseUserMenu}
                         >
                             {settings.map((setting) => (
-                                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                                    <Typography textAlign='center'>{setting}</Typography>
+                                <MenuItem 
+                                    component={Link} 
+                                    to={setting.route} 
+                                    key={setting.page} 
+                                    onClick={handleCloseUserMenu}
+                                >
+                                    <Typography textAlign='center'>{setting.page}</Typography>
                                 </MenuItem>
                             ))}
                         </Menu>

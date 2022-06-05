@@ -135,7 +135,7 @@ router.post('/:id/areas', passport.authenticate('jwt',{session:false}), async (r
             points: req.body.points
         })
 
-        newArea.save()
+        await newArea.save()
 
         await Project.addArea(project._id,newArea._id)
         res.json(newArea)
@@ -184,9 +184,17 @@ router.post('/:id/standing_points', passport.authenticate('jwt',{session:false})
         let newPoint = new Standing_Point({
             longitude: req.body.longitude,
             latitude: req.body.latitude,
-            title: req.body.title
+            title: req.body.title,
+            refCount: 1
         })
-        newPoint.save()
+        newPoint.save(function (error) {
+            console.log("Saving a point");
+            if (error) {
+              console.log("ERROR SAVING POINT: " + error);
+            } else {
+              console.log("New Point " + newPoint + " successfully added");
+            }
+        })
        
         await Project.addPoint(project._id,newPoint._id)
         res.json(newPoint)

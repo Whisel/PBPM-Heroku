@@ -16,6 +16,7 @@ import { Link } from 'react-router-dom';
 import './routes.css';
 
 function NewUser(){
+    // to access fname lname...etc values.fname, do not access show(Confirm)Password
     const [values, setValues] = React.useState({
         fname: '',
         lname: '',
@@ -30,6 +31,7 @@ function NewUser(){
         setValues({ ...values, [prop]: event.target.value });
     };
 
+    // Handles visibility toggle for password fields
     const handleClickShowPassword = () => {
         setValues({
             ...values,
@@ -48,45 +50,43 @@ function NewUser(){
         event.preventDefault();
     };
 
-    const submitNewUser = async () => {
-        let success = false;
-        let res = null;
-
-        try        
-        {            
-            const response = await fetch('https://measuringplacesd.herokuapp.com/api/adduser', {
-                method:'POST',
-                header: {
-                    Accept: 'application/json',
-                        'Content-Type': 'application/json',
-                },
-                body: {
-                    email: values.email,
-                    password: values.password
-                }
-            });
-            res = JSON.parse(await response.text());
-            success = res.success;           
-        }
-        catch (error) {
-            console.log("ERROR: ", error);
-            success = false;
-        }
-    };
+    const submitNewUser = () => {}
 
     return(
         <div id='newUser'>
-            <div id='pageTemplate'>
+            <div className='pageTemplate'>
                 <Link className='backButton' to='/'><Back className='iconShadow' /></Link>
+                {/* tagBox - sizing for form card, on Title.js as well */}
                 <div className='tagBox'>
                     <Card id='pageCard'>
                         <Card.Body>
                             <h3>Create an account</h3>
                             <br/>
                             <Box component='form' sx={{ display: 'flex', flexWrap: 'wrap' }}>
-                                <TextField  className='nonFCInput' id='outlined-search' label='First Name' type='text' value={values.fname} onChange={handleChange('fname')}/>
-                                <TextField className='nonFCInput' id='outlined-search' label='Last Name' type='text' value={values.lname} onChange={handleChange('lname')}/>
-                                <TextField className='nonFCInput' id='outlined-search' label='Email' type='email' value={values.email} onChange={handleChange('email')}/>
+                                <TextField  
+                                    className='nonFCInput' 
+                                    id='outlined-search' 
+                                    label='First Name' 
+                                    type='text' 
+                                    value={values.fname} 
+                                    onChange={handleChange('fname')}
+                                />
+                                <TextField 
+                                    className='nonFCInput' 
+                                    id='outlined-search' 
+                                    label='Last Name' 
+                                    type='text' 
+                                    value={values.lname} 
+                                    onChange={handleChange('lname')}
+                                />
+                                <TextField 
+                                    className='nonFCInput' 
+                                    id='outlined-search' 
+                                    label='Email' 
+                                    type='email' 
+                                    value={values.email} 
+                                    onChange={handleChange('email')}
+                                />
                                 <FormControl sx={{ m: 1}} variant='outlined'>
                                     <InputLabel htmlFor='outlined-adornment-password'>Password</InputLabel>
                                     <OutlinedInput
@@ -110,7 +110,9 @@ function NewUser(){
                                     />
                                 </FormControl>
                                 <FormControl sx={{ m: 1 }} variant='outlined'>
-                                    <InputLabel htmlFor='outlined-adornment-password'> Confirm Password</InputLabel>
+                                    <InputLabel htmlFor='outlined-adornment-password'>
+                                        Confirm Password
+                                    </InputLabel>
                                     <OutlinedInput
                                         id='outlined-adornment-password'
                                         type={values.showConfirmPassword ? 'text' : 'password'}
@@ -124,7 +126,10 @@ function NewUser(){
                                                     onMouseDown={handleMouseDownPassword}
                                                     edge='end'
                                                 >
-                                                    {values.showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                                                    {
+                                                        values.showConfirmPassword ? 
+                                                        <VisibilityOff /> : <Visibility />
+                                                    }
                                                 </IconButton>
                                             </InputAdornment>
                                         }
@@ -132,7 +137,13 @@ function NewUser(){
                                     />
                                 </FormControl>
                                 <br/>
-                                <Button className='scheme' type='submit' size='lg' id='newUserButton' onClick={submitNewUser}>
+                                <Button 
+                                    className='scheme' 
+                                    type='submit' 
+                                    size='lg' 
+                                    id='newUserButton' 
+                                    onClick={submitNewUser}
+                                >
                                     Create
                                 </Button>
                             </Box>

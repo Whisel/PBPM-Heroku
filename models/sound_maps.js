@@ -7,30 +7,69 @@ const Points = require('../models/standing_points.js')
 
 // Document Schema for data entry
 const dataSchema = mongoose.Schema({
-
     decibel_1: {
-        type: Number,
-        required: true
+        recording:{
+            type: Number,
+            required: true
+            },
+        predominant_type: {
+            type: String,
+            // type: Number,
+            // enum: ['nature','diffused conversations','traffic noise','equipment','foundations (water)'],
+            required: true
+        },
     },
 
     decibel_2: {
-        type: Number,
-        required: true
+        recording:{
+            type: Number,
+            required: true
+        },
+        predominant_type: {
+            type: String,
+            // type: Number,
+            // enum: ['nature','diffused conversations','traffic noise','equipment','foundations (water)'],
+            required: true
+        },
     },
 
     decibel_3: {
-        type: Number,
-        required: true
+        recording:{
+            type: Number,
+            required: true
+        },
+        predominant_type: {
+            type: String,
+            // type: Number,
+            // enum: ['nature','diffused conversations','traffic noise','equipment','foundations (water)'],
+            required: true
+        },
     },
 
     decibel_4: {
-        type: Number,
-        required: true
+        recording:{
+            type: Number,
+            required: true
+        },
+        predominant_type: {
+            type: String,
+            // type: Number,
+            // enum: ['nature','diffused conversations','traffic noise','equipment','foundations (water)'],
+            required: true
+        },
     },
 
     decibel_5: {
-        type: Number,
-        required: true
+        recording:{
+            type: Number,
+            required: true
+        },
+        predominant_type: {
+            type: String,
+            // type: Number,
+            // enum: ['nature','diffused conversations','traffic noise','equipment','foundations (water)'],
+            required: true
+        },
     },
     
     average: {
@@ -38,11 +77,12 @@ const dataSchema = mongoose.Schema({
         required: true
     },
 
-    sound_type: {
-        type: Number,
-        enum: ['nature','diffused conversations','traffic noise','equipment','foundations (water)'],
+    sound_type: [{
+        type: String,
+        // type: Number,
+        // enum: ['nature','diffused conversations','traffic noise','equipment','foundations (water)'],
         required: true
-    },
+    }],
 
     standingPoint: {
         type: ObjectId,
@@ -133,7 +173,7 @@ module.exports.deleteMap = async function(mapId) {
     const map = await Maps.findById(mapId)
 
     for(var i = 0; i < map.standingPoints.length; i++)
-        Points.removeRefrence(map.standingPoints[i])
+        await Points.removeRefrence(map.standingPoints[i])
     
     return await Maps.findByIdAndDelete(mapId)
 }
@@ -155,7 +195,7 @@ module.exports.addEntry = async function(mapId, newEntry) {
         time: newEntry.time
     })
 
-    Points.addRefrence(newEntry.standingPoint)
+    await Points.addRefrence(newEntry.standingPoint)
 
     return await Maps.updateOne(
         { _id: mapId },

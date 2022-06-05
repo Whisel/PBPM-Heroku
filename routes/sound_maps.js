@@ -112,10 +112,10 @@ router.put('/:id', passport.authenticate('jwt',{session:false}), async (req, res
     if(req.body.standingPoints){
 
         for(var i = 0; i < req.body.standingPoints.length; i++)
-            Points.addRefrence(req.body.standingPoints[i])
+            await Points.addRefrence(req.body.standingPoints[i])
         
         for(var i = 0; i < map.standingPoints.length; i++)
-            Points.removeRefrence(map.standingPoints[i])
+            await Points.removeRefrence(map.standingPoints[i])
 
     }
 
@@ -184,8 +184,8 @@ router.put('/:id/data/:data_id', passport.authenticate('jwt',{session:false}), a
             time: (req.body.time ? req.body.time : oldData.time)
         }
 
-        if (req.body.sound_type.length > 2)
-            throw new BadRequestError('Datapoints can only have one sound type')
+        if (req.body.predominant_type.length > 2)
+            throw new BadRequestError('Datapoints can only have one predominant sound type')
 
         if(req.body.standingPoint){
             Points.addRefrence(req.body.standingPoint)
