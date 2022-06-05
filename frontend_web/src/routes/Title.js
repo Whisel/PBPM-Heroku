@@ -1,5 +1,5 @@
 import * as React from 'react';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useHistory } from 'react-router-dom'
 import Box from '@mui/material/Box';
 import Card from 'react-bootstrap/Card';
