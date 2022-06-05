@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Card from 'react-bootstrap/Card';
 import Image from 'react-bootstrap/Image';
@@ -21,7 +21,7 @@ import logo1 from '../images/PtBPLogo.png';
 
 function Title() {
     // Access email, password like values.email, do not mutate or modify
-    const [values, setValues] = React.useState({
+    const [values, setValues] = useState({
         email: '',
         password: '',
         history: useHistory(),
@@ -46,7 +46,7 @@ function Title() {
         event.preventDefault();
     };
 
-    React.useEffect(() => {
+    useEffect(() => {
         if(localStorage.getItem('user-ingo')) {
             history.push("/add")
         }
