@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { useHistory } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Card from 'react-bootstrap/Card';
 import Image from 'react-bootstrap/Image';
@@ -14,7 +13,7 @@ import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
-import { Link, Navigate } from 'react-router-dom';
+import { Link, Navigate, useHistory } from 'react-router-dom';
 
 import './routes.css';
 import logo1 from '../images/PtBPLogo.png';
