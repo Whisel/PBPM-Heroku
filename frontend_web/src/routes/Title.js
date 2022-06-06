@@ -22,6 +22,8 @@ function Title() {
     const email = '';
     const password = '';
     const history = useNavigate();
+    const setEmail = '';
+    const setPassword = '';
     // Access email, password like values.email, do not mutate or modify
     const [values, setValues] = React.useState({
         email: '',
