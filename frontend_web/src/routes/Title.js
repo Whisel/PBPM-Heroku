@@ -51,7 +51,7 @@ function Title() {
 
     async function loginUser() {
         let item = { email, password };
-        let result = await fetch('https://measuringplacesd.herokuapp.com/api/login', {
+        let result = await fetch('https://measuringplacesd2.herokuapp.com/api/login', {
             method: 'POST',
                 headers: {
                     Accept: 'application/json',
