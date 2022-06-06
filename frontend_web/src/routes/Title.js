@@ -19,6 +19,8 @@ import './routes.css';
 import logo1 from '../images/PtBPLogo.png';
 
 function Title() {
+    const email = '';
+    const password = '';
     const history = useNavigate();
     // Access email, password like values.email, do not mutate or modify
     const [values, setValues] = React.useState({
