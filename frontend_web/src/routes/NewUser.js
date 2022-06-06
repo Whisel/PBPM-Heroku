@@ -14,7 +14,6 @@ import Back from '@mui/icons-material/ArrowBackRounded';
 import { Link } from 'react-router-dom';
 
 import './routes.css';
-import './importedRoutes/users.js';
 
 const express = require('express')
 const router = express.Router()
