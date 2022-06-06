@@ -19,11 +19,11 @@ import './routes.css';
 import logo1 from '../images/PtBPLogo.png';
 
 function Title() {
+    const history = useNavigate();
     // Access email, password like values.email, do not mutate or modify
     const [values, setValues] = useState({
         email: '',
         password: '',
-        history: useNavigate(),
         showPassword: false
     });
 
