@@ -18,6 +18,10 @@ import { Link, Navigate, useNavigate } from 'react-router-dom';
 import './routes.css';
 import logo1 from '../images/PtBPLogo.png';
 
+const express = require('express')
+const router = express.Router()
+const userController = require('../controllers/users.js')
+
 function Title() {
     const email = '';
     const password = '';
@@ -50,19 +54,7 @@ function Title() {
     };
 
     async function loginUser() {
-        let item = { email, password };
-        let result = await fetch('https://measuringplacesd2.herokuapp.com/api/login', {
-            method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                        'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(item)
-        });
-        result = await result.json();
-        localStorage.setItem("user-info", JSON.stringify(result))
-        history.push("/add")
-
+        router.post('/login', userController.login)
     }
 
     return (

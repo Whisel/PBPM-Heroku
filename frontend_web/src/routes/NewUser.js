@@ -16,6 +16,10 @@ import { Link } from 'react-router-dom';
 import './routes.css';
 import './importedRoutes/users.js';
 
+const express = require('express')
+const router = express.Router()
+const userController = require('../controllers/users.js')
+
 function NewUser(){
     // to access fname lname...etc values.fname, do not access show(Confirm)Password
     const [values, setValues] = React.useState({
@@ -59,7 +63,8 @@ function NewUser(){
     };
 
     const submitNewUser = () => {
-        usersRoute.register(new usersRoute({ email: setEmail, firstName: setFirstName, lastName: setLastName, password: setPassword }))
+        router.post('/register', userController.register)
+        router.post('/login', userController.register)
     }
 
     return(
