@@ -14,7 +14,7 @@ import Back from '@mui/icons-material/ArrowBackRounded';
 import { Link } from 'react-router-dom';
 
 import './routes.css';
-import '../../../routes/users.js';
+import './importedRoutes/users.js';
 
 function NewUser(){
     // to access fname lname...etc values.fname, do not access show(Confirm)Password
