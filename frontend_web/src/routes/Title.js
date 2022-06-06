@@ -21,7 +21,7 @@ import logo1 from '../images/PtBPLogo.png';
 function Title() {
     const history = useNavigate();
     // Access email, password like values.email, do not mutate or modify
-    const [values, setValues] = useState({
+    const [values, setValues] = React.useState({
         email: '',
         password: '',
         showPassword: false
@@ -44,12 +44,6 @@ function Title() {
     const handleMouseDownPassword = (event) => {
         event.preventDefault();
     };
-
-    useEffect(() => {
-        if(localStorage.getItem('user-ingo')) {
-            history.push("/add")
-        }
-    }, [])
 
     async function loginUser() {
         let item = { email, password };
