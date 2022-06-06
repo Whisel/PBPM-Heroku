@@ -14,6 +14,7 @@ import Back from '@mui/icons-material/ArrowBackRounded';
 import { Link } from 'react-router-dom';
 
 import './routes.css';
+import '../../../routes/users.js';
 
 function NewUser(){
     // to access fname lname...etc values.fname, do not access show(Confirm)Password
@@ -26,6 +27,13 @@ function NewUser(){
         showPassword: false,
         showConfirmPassword: false
     });
+
+    const setEmail = '';
+    const setFirstName = '';
+    const setLastName = '';
+    const setPassword = '';
+
+    const usersRoute = require('../../../routes/users.js');
 
     const handleChange = (prop) => (event) => {
         setValues({ ...values, [prop]: event.target.value });
@@ -50,7 +58,9 @@ function NewUser(){
         event.preventDefault();
     };
 
-    const submitNewUser = () => {}
+    const submitNewUser = () => {
+        usersRoute.register(new usersRoute({ email: setEmail, firstName: setFirstName, lastName: setLastName, password: setPassword }))
+    }
 
     return(
         <div id='newUser'>
@@ -69,7 +79,7 @@ function NewUser(){
                                     label='First Name' 
                                     type='text' 
                                     value={values.fname} 
-                                    onChange={handleChange('fname')}
+                                    onChange={(e)=>setFirstName(e.target.value)}
                                 />
                                 <TextField 
                                     className='nonFCInput' 
@@ -77,7 +87,7 @@ function NewUser(){
                                     label='Last Name' 
                                     type='text' 
                                     value={values.lname} 
-                                    onChange={handleChange('lname')}
+                                    onChange={(e)=>setLastName(e.target.value)}
                                 />
                                 <TextField 
                                     className='nonFCInput' 
@@ -85,7 +95,7 @@ function NewUser(){
                                     label='Email' 
                                     type='email' 
                                     value={values.email} 
-                                    onChange={handleChange('email')}
+                                    onChange={(e)=>setEmail(e.target.value)}
                                 />
                                 <FormControl sx={{ m: 1}} variant='outlined'>
                                     <InputLabel htmlFor='outlined-adornment-password'>Password</InputLabel>
@@ -93,7 +103,7 @@ function NewUser(){
                                         id='outlined-adornment-password'
                                         type={values.showPassword ? 'text' : 'password'}
                                         value={values.password}
-                                        onChange={handleChange('password')}
+                                        onChange={(e)=>setPassword(e.target.value)}
                                         endAdornment={
                                             <InputAdornment position='end'>
                                                 <IconButton
