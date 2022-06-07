@@ -36,8 +36,6 @@ function NewUser(){
     const setLastName = '';
     const setPassword = '';
 
-    const usersRoute = require('./importedRoutes/users.js');
-
     const handleChange = (prop) => (event) => {
         setValues({ ...values, [prop]: event.target.value });
     };
