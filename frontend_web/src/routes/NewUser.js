@@ -16,8 +16,6 @@ import { Link } from 'react-router-dom';
 
 import './routes.css';
 
-const express = require('express')
-const router = express.Router()
 const userController = require('../controllers/users.js')
 
 function NewUser(){

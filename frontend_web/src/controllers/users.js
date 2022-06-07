@@ -1,10 +1,10 @@
-const User = require('../models/users.js')
-const bycrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
+import User, { findOne } from '../models/users.js'
+import { hash, compare } from 'bcryptjs'
+import { sign } from 'jsonwebtoken'
 
 //this registers new users into the database
 const register = (req, res, next) => {
-    bycrypt.hash(req.body.password, 10, function(err, hashedPass){
+    hash(req.body.password, 10, function(err, hashedPass){
         if(err) {
             res.json({
                 error: err
@@ -34,16 +34,16 @@ const login = (req, res, next) => {
     var email = req.body.email
     var password = req.body.password
 
-    User.findOne({$or: [{email: email}]}).then(user =>  {
+    findOne({$or: [{email: email}]}).then(user =>  {
         if(user){
-            bycrypt.compare(password, user.password, function(err, result) {
+            compare(password, user.password, function(err, result) {
                 if(err) {
                     res.json({
                         error: err
                     })
                 }
                 if(result){
-                    let token = jwt.sign({name: user.name}, 'secretValue', {expiresIn: '24h'})
+                    let token = sign({name: user.name}, 'secretValue', {expiresIn: '24h'})
                     res.json({
                         message: 'Login Successful!',
                         token
@@ -63,6 +63,6 @@ const login = (req, res, next) => {
 }
 
 
-module.exports = {
+export default {
     register, login
 }
