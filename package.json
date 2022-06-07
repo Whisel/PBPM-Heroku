@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "homepage": "https://measuringplacesd2.herokuapp.com/",
+  "homepage": "https://measuringplacesd.herokuapp.com/",
   "scripts": {
     "start": "node app.js",
     "dev": "cross-env NODE_ENV=dev node app.js",
@@ -35,9 +35,6 @@
     "passport-json": "^1.2.0",
     "passport-jwt": "^4.0.0",
     "passport-local-mongoose": "^6.0.1",
-    "path": "^0.12.7",
-    "stream": "^0.0.2",
-    "sweetalert": "^2.1.2",
     "xoauth2": "^1.2.0"
   }
 }

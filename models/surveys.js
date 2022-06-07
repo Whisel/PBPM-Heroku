@@ -41,11 +41,13 @@ const survey_schema = mongoose.Schema({
     key:{
         type: String,
         unique: true
-    }   
+    }          
 })
 
-const Counter = mongoose.model('Survey_Key_Tracker', survey_key_schema)
 const Surveys = module.exports = mongoose.model('Surveys', survey_schema)
+const Counter = mongoose.model('Survey_Key_Tracker', survey_key_schema)
+
+
 
 module.exports.addSurvey = async function(newSurvey) {
     var builderString = "3UROGSWIVE01A9LMKQB7FZ6DJ4NC28Y5HTXP"
@@ -66,8 +68,9 @@ module.exports.addSurvey = async function(newSurvey) {
     
     for(var i = 0; i < 6; i++){
         keyString += builderString[ keyInt % 36 ]
-        keyInt = Math.floor(keyInt/36)
+        keyInt = Math.floor(Math.random()*keyInt/36)
     }
+
     newSurvey.key = keyString
     
     return await newSurvey.save()
@@ -122,3 +125,24 @@ module.exports.isResearcher = async function(surveyId, userId){
     }
     return true
 }
+
+module.exports.addEntry = async function(surveyId, newEntry) {
+    var entry = new Entry({
+        time: newEntry.time,
+    })
+
+    return await Surveys.updateOne(
+        { _id: surveyId },
+        { $push: { data: entry}}
+    )
+}
+
+
+module.exports.deleteEntry = async function(surveyId, entryId) {
+
+    return await Surveys.updateOne(
+        { _id: surveyId },
+        { $pull: { data: {_id:entryId }}
+        })
+}
+

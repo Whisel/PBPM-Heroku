@@ -220,7 +220,7 @@ router.put(
 
       if (req.body.standingPoint) {
         Points.addRefrence(req.body.standingPoint);
-        Points.removeRefrence(oldDat.standingPoint);
+        Points.removeRefrence(oldData.standingPoint);
       }
 
       await Map.updateData(mapId, oldData._id, newData);

@@ -17,7 +17,7 @@ const collection_schema = mongoose.Schema({
     duration: {
         type: Number,
         required: true,
-        default: 15
+        default: 10
     },
     area: {
         type: ObjectId,
@@ -48,7 +48,7 @@ module.exports.deleteCollection = async function(collectionId){
     await Area.removeRefrence(collection.area)
 
     for(var i = 0; i < collection.surveys.length; i++)
-        await Survey.findByIdAndDelete(collection.surveys[i])
+        await Surveys.findByIdAndDelete(collection.surveys[i])
 
     return await Collection.findByIdAndDelete(collectionId)
 }
@@ -65,7 +65,7 @@ module.exports.updateCollection = async function(collectionId, newCollection){
         { _id: collectionId },
         { $set: {
             title: newCollection.title,
-            time: newCollection.date,
+            date: newCollection.date,
             area: newCollection.area,
             duration: newCollection.duration
         }}

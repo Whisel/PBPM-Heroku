@@ -15,10 +15,6 @@ import { Link } from 'react-router-dom';
 
 import './routes.css';
 
-const express = require('express')
-const router = express.Router()
-const userController = require('../controllers/users.js')
-
 function NewUser(){
     // to access fname lname...etc values.fname, do not access show(Confirm)Password
     const [values, setValues] = React.useState({
@@ -30,11 +26,6 @@ function NewUser(){
         showPassword: false,
         showConfirmPassword: false
     });
-
-    const setEmail = '';
-    const setFirstName = '';
-    const setLastName = '';
-    const setPassword = '';
 
     const handleChange = (prop) => (event) => {
         setValues({ ...values, [prop]: event.target.value });
@@ -59,10 +50,7 @@ function NewUser(){
         event.preventDefault();
     };
 
-    const submitNewUser = () => {
-        router.post('/register', userController.register)
-        router.post('/login', userController.register)
-    }
+    const submitNewUser = () => {}
 
     return(
         <div id='newUser'>
@@ -80,41 +68,41 @@ function NewUser(){
                                     id='outlined-search' 
                                     label='First Name' 
                                     type='text' 
-                                    value={values.fname} 
-                                    onChange={(e)=>setFirstName(e.target.value)}
+                                    value={ values.fname } 
+                                    onChange={ handleChange('fname') }
                                 />
                                 <TextField 
                                     className='nonFCInput' 
                                     id='outlined-search' 
                                     label='Last Name' 
                                     type='text' 
-                                    value={values.lname} 
-                                    onChange={(e)=>setLastName(e.target.value)}
+                                    value={ values.lname } 
+                                    onChange={ handleChange('lname') }
                                 />
                                 <TextField 
                                     className='nonFCInput' 
                                     id='outlined-search' 
                                     label='Email' 
                                     type='email' 
-                                    value={values.email} 
-                                    onChange={(e)=>setEmail(e.target.value)}
+                                    value={ values.email } 
+                                    onChange={ handleChange('email') }
                                 />
                                 <FormControl sx={{ m: 1}} variant='outlined'>
                                     <InputLabel htmlFor='outlined-adornment-password'>Password</InputLabel>
                                     <OutlinedInput
                                         id='outlined-adornment-password'
-                                        type={values.showPassword ? 'text' : 'password'}
-                                        value={values.password}
-                                        onChange={(e)=>setPassword(e.target.value)}
+                                        type={values.showPassword ? 'text' : 'password' }
+                                        value={ values.password }
+                                        onChange={ handleChange('password') }
                                         endAdornment={
                                             <InputAdornment position='end'>
                                                 <IconButton
                                                     aria-label='visibility toggle'
-                                                    onClick={handleClickShowPassword}
-                                                    onMouseDown={handleMouseDownPassword}
+                                                    onClick={ handleClickShowPassword }
+                                                    onMouseDown={ handleMouseDownPassword }
                                                     edge='end'
                                                 >
-                                                    {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                                                    { values.showPassword ? <VisibilityOff /> : <Visibility /> }
                                                 </IconButton>
                                             </InputAdornment>
                                         }
@@ -127,15 +115,15 @@ function NewUser(){
                                     </InputLabel>
                                     <OutlinedInput
                                         id='outlined-adornment-password'
-                                        type={values.showConfirmPassword ? 'text' : 'password'}
-                                        value={values.confirmPassword}
-                                        onChange={handleChange('confirmPassword')}
+                                        type={ values.showConfirmPassword ? 'text' : 'password' }
+                                        value={ values.confirmPassword }
+                                        onChange={ handleChange('confirmPassword') }
                                         endAdornment={
                                             <InputAdornment position='end'>
                                                 <IconButton
                                                     aria-label='visibility toggle'
-                                                    onClick={handleClickShowConPassword}
-                                                    onMouseDown={handleMouseDownPassword}
+                                                    onClick={ handleClickShowConPassword }
+                                                    onMouseDown={ handleMouseDownPassword }
                                                     edge='end'
                                                 >
                                                     {
@@ -154,7 +142,7 @@ function NewUser(){
                                     type='submit' 
                                     size='lg' 
                                     id='newUserButton' 
-                                    onClick={submitNewUser}
+                                    onClick={ submitNewUser }
                                 >
                                     Create
                                 </Button>

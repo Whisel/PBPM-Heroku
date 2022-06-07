@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Card from 'react-bootstrap/Card';
 import Image from 'react-bootstrap/Image';
@@ -13,21 +12,12 @@ import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 
 import './routes.css';
 import logo1 from '../images/PtBPLogo.png';
 
-const express = require('express')
-const router = express.Router()
-const userController = require('../controllers/users.js')
-
 function Title() {
-    const email = '';
-    const password = '';
-    const history = useNavigate();
-    const setEmail = '';
-    const setPassword = '';
     // Access email, password like values.email, do not mutate or modify
     const [values, setValues] = React.useState({
         email: '',
@@ -53,9 +43,32 @@ function Title() {
         event.preventDefault();
     };
 
-    async function loginUser() {
-        router.post('/login', userController.login)
-    }
+    const loginUser = async () => {
+        let success = false;
+        let res = null;
+
+        try {
+
+            const response = await fetch('https://measuringplacesd.herokuapp.com/api/login', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                },
+                body: {
+                    email: values.email,
+                    password: values.password
+                }
+            });
+            res = JSON.parse(await response.text());
+            success = res.success;
+            <Navigate to='/home'/>
+        } catch ( error ) {
+            console.log('ERROR: ', error);
+            success = false;
+            //create error component
+        }
+    };
 
     return (
         <div className='titlePage'>
@@ -64,7 +77,7 @@ function Title() {
                 {/* tag - sizing for logo/tag (title text) */}
                 <div className='tag'>
                     <div className='logo'>
-                        <Image src={logo1} className='App-logo' alt='logo' id='logo1'/>
+                        <Image src={ logo1 } className='App-logo' alt='logo' id='logo1'/>
                     </div>
                     <div id='tagText'>Pipeline to Better Placemaking</div>
                 </div>
@@ -78,27 +91,27 @@ function Title() {
                                     label='Email' 
                                     type='email' 
                                     name='email' 
-                                    value={values.email} 
-                                    onChange={(e)=>setEmail(e.target.value)} 
+                                    value={ values.email } 
+                                    onChange={ handleChange } 
                                 />
                                 {/* Form Control component to hold MUI visibility changing password field */}
                                 <FormControl sx={{ m: 1 }} variant='outlined'>
                                     <InputLabel htmlFor='outlined-adornment-password'>Password</InputLabel>
                                     <OutlinedInput
                                         id='outlined-adornment-password'
-                                        type={values.showPassword ? 'text' : 'password'}
+                                        type={ values.showPassword ? 'text' : 'password' }
                                         name='password'
-                                        value={values.password}
-                                        onChange={(e)=>setPassword(e.target.value)}
+                                        value={ values.password }
+                                        onChange={ handleChange }
                                         endAdornment={
                                             <InputAdornment position='end'>
                                                 <IconButton
                                                     aria-label='visibility toggle'
-                                                    onClick={handleClickShowPassword}
-                                                    onMouseDown={handleMouseDownPassword}
+                                                    onClick={ handleClickShowPassword }
+                                                    onMouseDown={ handleMouseDownPassword }
                                                     edge='end'
                                                 >
-                                                    {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                                                    { values.showPassword ? <VisibilityOff /> : <Visibility /> }
                                                 </IconButton>
                                             </InputAdornment>
                                         }
@@ -110,13 +123,13 @@ function Title() {
                                     id='loginButton' 
                                     type='submit' 
                                     size='lg' 
-                                    onClick={loginUser}
+                                    onClick={ loginUser }
                                 >
                                     Log in
                                 </Button>
                             </Box>
                             <div className='d-grid'>
-                                <Button component={Link} to='/new' className='scheme secondButton' size='lg'>
+                                <Button component={ Link } to='/new' className='scheme secondButton' size='lg'>
                                     Create Account
                                 </Button>
                             </div>
