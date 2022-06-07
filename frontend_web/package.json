@@ -48,10 +48,6 @@
       "last 1 safari version"
     ]
   },
-  "browser": {
-    "http": false,
-    "https": false
-  },
   "devDependencies": {
     "@types/googlemaps": "^3.43.3"
   }
