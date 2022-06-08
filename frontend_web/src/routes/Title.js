@@ -59,10 +59,10 @@ function Title() {
             const response = await axios.post('/login', {
                signal: controller.signal
             });
-            isMounted && setUser(response.data);
+            console.log(JSON.stringify(response));
             console.log(response.data);
             console.log(response.accessToken);
-            console.log(JSON.stringify(response));
+            setUser(response.data);
             <Navigate to='/home'/>
 
         } catch(error){
