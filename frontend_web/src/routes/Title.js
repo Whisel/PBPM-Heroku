@@ -59,7 +59,7 @@ function Title() {
                withCredentials: true
             });
             console.log(JSON.stringify(response));
-            console.log(response.data.accessToken);
+            console.log(response.data);
             setUser('');
             this.props.history.push("/home");
 
