@@ -60,9 +60,7 @@ function NewUser(){
     const [lastname, setLastname] = useState('');
 
     //registering user function
-    const submitNewUser = async (e) => {
-        e.preventDefault();
-
+    const submitNewUser = async e => {
         if (password !== confirmPassword) {
             return;
         }
@@ -79,47 +77,38 @@ function NewUser(){
 
         //trying to register the user
         try{
-            const response = await fetch('https://measuringplacesd.herokuapp.com/api/register', {
+            const response = await fetch('https://measuringplacesd.herokuapp.com/api/users', {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
                     'Constent-Type': 'application/json',
                 },
-                body: {
-                    email: email,
-                    password: password,
-                    firstname: firstname,
-                    lastname: lastname,
-                }
+                body: JSON.stringify(user)
             });
             const res = await response.json();
-            console.log(response.data);
-            console.log(response.accessToken);
-            console.log(JSON.stringify(response))
             console.log('OK: ' + response.ok, 'Signup response: ' + JSON.stringify(res));
-            <Navigate to='/home'/>
 
             //augmented from mobile app with localStorage rather than AsyncStorage
-            // if(response.ok){
-            //     localStorage.setItem('@token', response.token);
-            //     localStorage.setItem('@id', response.user._id);
-            //     localStorage.setItem("@isVerified", JSON.stringify(res.user.is_verified))
-            //     localStorage.setItem("@email", res.user.email)
-            //     localStorage.setItem("@firstName", res.user.firstname)
-            //     localStorage.setItem("@lastName", res.user.lastname)
-            //     localStorage.setItem("@teams", JSON.stringify(res.user.teams))
-            //     localStorage.setItem("@invites", JSON.stringify(res.user.invites))
-            //     localStorage.setItem("@mapConfig", "satellite")
+            if(response.ok){
+                localStorage.setItem('@token', response.token);
+                localStorage.setItem('@id', response.user._id);
+                localStorage.setItem("@isVerified", JSON.stringify(res.user.is_verified))
+                localStorage.setItem("@email", res.user.email)
+                localStorage.setItem("@firstName", res.user.firstname)
+                localStorage.setItem("@lastName", res.user.lastname)
+                localStorage.setItem("@teams", JSON.stringify(res.user.teams))
+                localStorage.setItem("@invites", JSON.stringify(res.user.invites))
+                localStorage.setItem("@mapConfig", "satellite")
 
-            //     let { status } = await Location.requestForegroundPermissionsAsync();
+                let { status } = await Location.requestForegroundPermissionsAsync();
 
-            //     if( status !== 'granted' ) {
-            //         console.log('Permission to access location was denied');
-            //     }
-            //     <Navigate to='/home'/>
-            // }
+                if( status !== 'granted' ) {
+                    console.log('Permission to access location was denied');
+                }
+                <Navigate to='/home'/>
+            }
         } catch(error) {
-            console.log('ERROR: ', error);
+            console.log(error);
         }
     }
 
