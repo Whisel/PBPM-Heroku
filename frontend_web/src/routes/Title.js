@@ -60,8 +60,7 @@ function Title() {
                signal: controller.signal
             });
             console.log(JSON.stringify(response));
-            console.log(response.data);
-            console.log(response.accessToken);
+            console.log(response.data.accessToken);
             setUser(response.data);
             <Navigate to='/home'/>
 
