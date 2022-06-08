@@ -48,7 +48,7 @@ function Title() {
     const [password, setPassword] = useState("");
     const [user, setUser] = useState("");
 
-    const loginUser = async e => {
+    const loginUser = async (e) => {
         let res = null;
         let success = false;
 
