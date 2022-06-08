@@ -70,7 +70,7 @@ function NewUser(){
         if(lastname !== '') user.lastname = lastname;
 
         try{
-            const response = await axios.post(registerURL, JSON.stringify({firstname, lastname, email, password }), {
+            const response = await axios.post(registerURL, JSON.stringify({ email, password }), {
                 headers: { 'Content-Type': 'application/json' },
                 withCredentials: true
             });
