@@ -61,6 +61,8 @@ function Title() {
             });
             isMounted && setUser(response.data);
             console.log(response.data);
+            console.log(response.accessToken);
+            console.log(JSON.stringify(response));
             <Navigate to='/home'/>
 
         } catch(error){
