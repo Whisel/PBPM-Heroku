@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import axios from "axios";
+import axios from '../api/axios';
 import Box from '@mui/material/Box';
 import Card from 'react-bootstrap/Card';
 import Image from 'react-bootstrap/Image';
@@ -50,34 +50,24 @@ function Title() {
     const [user, setUser] = useState("");
 
     const loginUser = async e => {
-        let res = null;
-        let success = false;
-
         e.preventDefault();
         const user = { email, password };
+        const controller = new AbortController();
+        let isMounted = true;
+        
         try {
-            const response = await fetch('https://measuringplacesd.herokuapp.com/api/login', {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                        'Content-Type': 'application/json',
-                },
-                body: {
-                    email: email,
-                    password: password
-                }
+            const response = await axios.post('/login', {
+               signal: controller.signal
             });
-            setUser(response.data);
-            res = JSON.parse(await response.text());
-            localStorage.setItem('user', response.data);
-            success = res.success();
+            isMounted && setUser(response.data);
             console.log(response.data);
             <Navigate to='/home'/>
 
         } catch(error){
             //user login error
             console.log('ERROR: ', error);
-            success = false;
+            isMounted = false;
+            controller.abort();
         }
     };
 
