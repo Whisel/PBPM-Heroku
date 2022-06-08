@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import axios from '../api/axios';
+import axios from '../api/axios.js';
 import Box from '@mui/material/Box';
 import Card from 'react-bootstrap/Card';
 import Image from 'react-bootstrap/Image';
@@ -54,7 +54,7 @@ function Title() {
         const user = { email, password };
         const controller = new AbortController();
         let isMounted = true;
-        
+
         try {
             const response = await axios.post('/login', {
                signal: controller.signal

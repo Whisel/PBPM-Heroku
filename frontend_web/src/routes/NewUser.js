@@ -13,7 +13,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Back from '@mui/icons-material/ArrowBackRounded';
 import { Link, Navigate } from 'react-router-dom';
-import axios from '../api/axois';
+import axios from '../api/axios.js';
 
 import './routes.css';
 
@@ -70,7 +70,7 @@ function NewUser(){
         if(lastname !== '') user.lastname = lastname;
 
         try{
-            const response = await axios.post(registerURL, JSON.stringify({ email, password }), {
+            const response = await axios.post(registerURL, JSON.stringify({firstname, lastname, email, password }), {
                 headers: { 'Content-Type': 'application/json' },
                 withCredentials: true
             });
@@ -101,32 +101,32 @@ function NewUser(){
                                     id='outlined-search' 
                                     label='First Name' 
                                     type='text' 
-                                    value={ values.fname } 
-                                    onChange={ handleChange('fname') }
+                                    value={ firstname } 
+                                    onChange={ ({target}) => setFirstname(target.value) }
                                 />
                                 <TextField 
                                     className='nonFCInput' 
                                     id='outlined-search' 
                                     label='Last Name' 
                                     type='text' 
-                                    value={ values.lname } 
-                                    onChange={ handleChange('lname') }
+                                    value={ lastname } 
+                                    onChange={ ({target}) => setLastname(target.value) }
                                 />
                                 <TextField 
                                     className='nonFCInput' 
                                     id='outlined-search' 
                                     label='Email' 
                                     type='email' 
-                                    value={ values.email } 
-                                    onChange={ handleChange('email') }
+                                    value={ email } 
+                                    onChange={ ({target}) => setEmail(target.value) }
                                 />
                                 <FormControl sx={{ m: 1}} variant='outlined'>
                                     <InputLabel htmlFor='outlined-adornment-password'>Password</InputLabel>
                                     <OutlinedInput
                                         id='outlined-adornment-password'
                                         type={values.showPassword ? 'text' : 'password' }
-                                        value={ values.password }
-                                        onChange={ handleChange('password') }
+                                        value={ password }
+                                        onChange={ ({target}) => setPassword(target.value) }
                                         endAdornment={
                                             <InputAdornment position='end'>
                                                 <IconButton
@@ -149,8 +149,8 @@ function NewUser(){
                                     <OutlinedInput
                                         id='outlined-adornment-password'
                                         type={ values.showConfirmPassword ? 'text' : 'password' }
-                                        value={ values.confirmPassword }
-                                        onChange={ handleChange('confirmPassword') }
+                                        value={ confirmPassword }
+                                        onChange={ ({target}) => setConfirmPassword(target.value) }
                                         endAdornment={
                                             <InputAdornment position='end'>
                                                 <IconButton
