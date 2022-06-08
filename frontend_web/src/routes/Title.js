@@ -61,7 +61,7 @@ function Title() {
             console.log(JSON.stringify(response));
             console.log(response.data.accessToken);
             setUser('');
-            <Navigate to='/home'/>
+            this.props.history.push("/home");
 
         } catch(error){
             //user login error
