@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useState } from 'react';
-import axios from "axios";
 import Box from '@mui/material/Box';
 import Card from 'react-bootstrap/Card';
 import Image from 'react-bootstrap/Image';
@@ -60,7 +59,7 @@ function Title() {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
-                        'Content-Type': 'application/json',
+                    'Content-Type': 'application/json',
                 },
                 body: {
                     email: email,
