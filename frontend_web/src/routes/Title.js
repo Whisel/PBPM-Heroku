@@ -60,7 +60,6 @@ function Title() {
             });
             console.log(JSON.stringify(response));
             console.log(response.data);
-            setUser('');
             this.props.history.push("/home");
 
         } catch(error){
