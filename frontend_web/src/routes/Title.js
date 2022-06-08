@@ -49,26 +49,23 @@ function Title() {
     const [password, setPassword] = useState("");
     const [user, setUser] = useState("");
 
-    const loginUser = async e => {
+    const loginUser = async (e) => {
         e.preventDefault();
         const user = { email, password };
-        const controller = new AbortController();
-        let isMounted = true;
 
         try {
-            const response = await axios.post('/login', {
-               signal: controller.signal
+            const response = await axios.post('/login', JSON.stringify({ email, password }), {
+               headers: { 'Content-Type': 'application/json' },
+               withCredentials: true
             });
             console.log(JSON.stringify(response));
             console.log(response.data.accessToken);
-            setUser(response.data);
+            setUser('');
             <Navigate to='/home'/>
 
         } catch(error){
             //user login error
             console.log('ERROR: ', error);
-            isMounted = false;
-            controller.abort();
         }
     };
 
