@@ -60,7 +60,7 @@ function Title() {
             });
             console.log(JSON.stringify(response));
             console.log(response.data);
-            this.props.history.push("/home");
+            <Navigate to='/home'/>
 
         } catch(error){
             //user login error
