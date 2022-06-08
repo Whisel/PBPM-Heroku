@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { useState } from 'react';
+import axios from "axios";
 import Box from '@mui/material/Box';
 import Card from 'react-bootstrap/Card';
 import Image from 'react-bootstrap/Image';
@@ -43,12 +45,17 @@ function Title() {
         event.preventDefault();
     };
 
-    const loginUser = async () => {
-        let success = false;
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [user, setUser] = useState("");
+
+    const loginUser = async e => {
         let res = null;
+        let success = false;
 
+        e.preventDefault();
+        const user = { email, password };
         try {
-
             const response = await fetch('https://measuringplacesd.herokuapp.com/api/login', {
                 method: 'POST',
                 headers: {
@@ -56,18 +63,29 @@ function Title() {
                         'Content-Type': 'application/json',
                 },
                 body: {
-                    email: values.email,
-                    password: values.password
+                    email: email,
+                    password: password
                 }
             });
+            setUser(response.data);
             res = JSON.parse(await response.text());
-            success = res.success;
+            localStorage.setItem('user', response.data);
+            success = res.success();
+            console.log(response.data);
             <Navigate to='/home'/>
-        } catch ( error ) {
+
+        } catch(error){
+            //user login error
             console.log('ERROR: ', error);
             success = false;
-            //create error component
         }
+    };
+
+    const logoutUser = () => {
+        setUser({});
+        setEmail("");
+        setPassword("");
+        localStorage.clear();
     };
 
     return (
@@ -91,8 +109,8 @@ function Title() {
                                     label='Email' 
                                     type='email' 
                                     name='email' 
-                                    value={ values.email } 
-                                    onChange={ handleChange } 
+                                    value={ email } 
+                                    onChange={({target}) => setEmail(target.value)} 
                                 />
                                 {/* Form Control component to hold MUI visibility changing password field */}
                                 <FormControl sx={{ m: 1 }} variant='outlined'>
@@ -101,8 +119,8 @@ function Title() {
                                         id='outlined-adornment-password'
                                         type={ values.showPassword ? 'text' : 'password' }
                                         name='password'
-                                        value={ values.password }
-                                        onChange={ handleChange }
+                                        value={ password }
+                                        onChange={ ({target}) => setPassword(target.value) }
                                         endAdornment={
                                             <InputAdornment position='end'>
                                                 <IconButton
